@@ -1,80 +1,49 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import './navbar.css' // <--- PASTIKAN BARIS INI ADA
+
+
 
 function Navbar({ user, onLogout }) {
   const location = useLocation()
 
-  // Style untuk link aktif
-  const linkStyle = (path) => ({
-    padding: '8px 16px',
-    textDecoration: 'none',
-    color: location.pathname === path ? 'white' : '#333',
-    background: location.pathname === path ? '#2563eb' : 'transparent',
-    borderRadius: '8px',
-    fontWeight: '500'
-  })
+  // Helper untuk mengecek path aktif
+  const isActive = (path) => location.pathname === path
 
   return (
-    <nav style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      background: 'white',
-      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-      zIndex: 1000,
-      padding: '0 20px'
-    }}>
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: '70px'
-      }}>
-        {/* Logo */}
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+    <nav className="navbar-container">
+      <div className="navbar-content">
+        {/* Logo - Sisi Kiri */}
+        <Link to="/" className="navbar-logo">
           <img 
             src="/src/img/vokasi.jpg" 
             alt="Logo Vokasi" 
-            style={{
-              height: '50px',
-              width: 'auto',
-              objectFit: 'contain'
-            }}
           />
         </Link>
 
-        {/* Menu */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <Link to="/" style={linkStyle('/')}>Beranda</Link>
-          <Link to="/barang-hilang" style={linkStyle('/barang-hilang')}>Barang Hilang</Link>
-          <Link to="/barang-ditemukan" style={linkStyle('/barang-ditemukan')}>Barang Ditemukan</Link>
-          <Link to="/lapor" style={linkStyle('/lapor')}>Lapor</Link>
-          
-          {/* Tombol Login/Logout */}
+        {/* Menu Navigasi - Sisi Tengah */}
+        <div className="navbar-links">
+          <Link to="/" className={isActive('/') ? 'active' : ''}>
+            Lihat Barang
+          </Link>
+          <Link to="/lapor" className={isActive('/lapor') ? 'active' : ''}>
+            Lapor kehilangan
+          </Link>
+        </div>
+
+        {/* Tombol Auth - Sisi Kanan */}
+        <div className="navbar-auth">
           {user ? (
-            <>
-              <span style={{ fontSize: '14px', color: '#666' }}>
-                👤 {user.nama}
-              </span>
-              <button 
-                onClick={onLogout}
-                style={{
-                  padding: '8px 16px',
-                  background: '#ef4444',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer'
-                }}
-              >
-                Logout
+            <div className="user-profile">
+              <span className="user-name">👤 {user.nama}</span>
+              <button onClick={onLogout} className="btn-logout">
+                Keluar
               </button>
-            </>
+            </div>
           ) : (
-            <Link to="/login" style={linkStyle('/login')}>Login</Link>
+            <Link to="/login" className="btn-login">
+              Masuk
+            </Link>
           )}
         </div>
       </div>

@@ -1,0 +1,77 @@
+/* Gunakan Montserrat untuk seluruh navbar */
+.navbar-container {
+  font-family: 'Montserrat', sans-serif;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent; /* Hilangkan kotak abu-abu background */
+  padding: 20px 0;
+  z-index: 1000;
+}
+
+.navbar-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 8px 12px 8px 30px; /* Padding kanan lebih kecil supaya tombol pas */
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+}
+
+/* Bagian Kanan (Nav Links + Auth Button) */
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 40px; /* Jarak antara menu dan tombol */
+}
+
+.navbar-logo img {
+  height: 35px; /* Sesuaikan tinggi logo */
+  display: block;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 30px;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+/* Warna Kuning Spesifik E9B82F */
+.navbar-links a:hover, 
+.navbar-links a.active {
+  color: #E9B82F;
+}
+
+.btn-login {
+  background-color: #E9B82F;
+  color: white !important;
+  padding: 12px 40px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: opacity 0.3s;
+}
+
+.btn-login:hover {
+  opacity: 0.9;
+}
+
+/* Profile Section */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}

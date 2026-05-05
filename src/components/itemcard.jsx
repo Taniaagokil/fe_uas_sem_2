@@ -1,90 +1,141 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { HiOutlineOfficeBuilding } from 'react-icons/hi'
+import { IoLocationSharp, IoCalendarClear } from 'react-icons/io5'
 
 function ItemCard({ item }) {
-  // Warna badge sesuai status
-  const statusColor = {
-    lost: '#ef4444',      // Merah
-    found: '#22c55e',     // Hijau
-    claimed: '#eab308',   // Kuning
-    returned: '#3b82f6'   // Biru
-  }
-
-  const statusText = {
-    lost: 'Hilang',
-    found: 'Ditemukan',
-    claimed: 'Diklaim',
-    returned: 'Dikembalikan'
-  }
+  const themeColor = '#E2B053' 
+  const darkBlue = '#273A5A' // Font warna baru sesuai request kamu
 
   return (
-    <div style={{
-      background: 'white',
-      borderRadius: '12px',
-      overflow: 'hidden',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-      transition: 'transform 0.2s'
-    }}
-    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-    >
-      {/* Gambar */}
-      <div style={{ position: 'relative', height: '200px', background: '#e5e7eb' }}>
-        <img 
-          src={item.foto} 
-          alt={item.nama}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          onError={(e) => {
-            e.target.src = `https://via.placeholder.com/400x300?text=${item.nama}`
-          }}
-        />
-        {/* Badge Status */}
-        <span style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          background: statusColor[item.status],
-          color: 'white',
-          padding: '5px 12px',
-          borderRadius: '20px',
-          fontSize: '12px',
-          fontWeight: 'bold'
-        }}>
-          {statusText[item.status]}
-        </span>
-      </div>
+    <>
+      <style>
+        {`
+          .item-card {
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+          }
+          .item-card:hover {
+            transform: translateY(-10px); /* Kartu naik sedikit */
+            box-shadow: 0 12px 25px rgba(39, 58, 90, 0.15) !important;
+          }
+          .item-card:hover .card-image {
+            transform: scale(1.1); /* Gambar nge-zoom dikit */
+          }
+          .item-card:hover .detail-btn {
+            background-color: #273A5A !important; /* Tombol ganti warna pas hover */
+            box-shadow: 0 4px 12px rgba(39, 58, 90, 0.3) !important;
+          }
+        `}
+      </style>
 
-      {/* Info */}
-      <div style={{ padding: '15px' }}>
-        <h3 style={{ margin: '0 0 10px 0', fontSize: '18px' }}>
-          {item.nama}
-        </h3>
+      <div className="item-card" style={{
+        background: '#F8F9FA',
+        borderRadius: '20px', 
+        overflow: 'hidden',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
+        fontFamily: "'Montserrat', sans-serif",
+        padding: '10px', 
+        maxWidth: '280px',
+        position: 'relative'
+      }}>
         
-        <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>
-          📂 {item.kategori}
-        </div>
-        <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>
-          📍 {item.lokasi}
-        </div>
-        <div style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>
-          📅 {item.tanggal}
+        {/* Container Gambar dengan Animasi Zoom */}
+        <div style={{ borderRadius: '16px', overflow: 'hidden', height: '150px' }}>
+          <img 
+            className="card-image"
+            src={item.foto} 
+            alt={item.nama}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover',
+              transition: 'transform 0.5s ease' 
+            }}
+            onError={(e) => {
+              e.target.src = `https://via.placeholder.com/400x300?text=${item.nama}`
+            }}
+          />
         </div>
 
-        <Link to={`/barang/${item.id}`} style={{
-          display: 'block',
-          textAlign: 'center',
-          padding: '10px',
-          background: '#2563eb',
-          color: 'white',
-          textDecoration: 'none',
-          borderRadius: '8px',
-          fontWeight: '500'
-        }}>
-          Lihat Detail
-        </Link>
+        {/* Info Content */}
+        <div style={{ padding: '12px 6px 4px 6px' }}>
+          
+          {/* Badge Kategori */}
+          <div style={{
+            display: 'inline-block',
+            background: darkBlue,
+            color: 'white',
+            padding: '4px 14px',
+            borderRadius: '20px',
+            fontSize: '11px', 
+            fontWeight: '700',
+            marginBottom: '8px'
+          }}>
+            {item.kategori}
+          </div>
+
+          {/* Nama Barang */}
+          <h3 style={{ 
+            margin: '0 0 10px 0', 
+            fontSize: '16px', 
+            fontWeight: '800', 
+            color: darkBlue,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis' 
+          }}>
+            {item.nama}
+          </h3>
+          
+          {/* Detail List - Warna font sudah #273A5A */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
+            <div style={{...detailRowStyle, color: darkBlue}}>
+              <HiOutlineOfficeBuilding style={{ color: themeColor, fontSize: '15px' }} />
+              <span style={{ opacity: 0.8 }}>{item.instansi || 'Vokasi Veteran'}</span>
+            </div>
+            <div style={{...detailRowStyle, color: darkBlue}}>
+              <IoLocationSharp style={{ color: themeColor, fontSize: '15px' }} />
+              <span style={{ opacity: 0.8 }}>{item.lokasi}</span>
+            </div>
+            <div style={{...detailRowStyle, color: darkBlue}}>
+              <IoCalendarClear style={{ color: themeColor, fontSize: '15px' }} />
+              <span style={{ opacity: 0.8 }}>{item.tanggal}</span>
+            </div>
+          </div>
+
+          {/* Tombol Detail dengan Animasi Hover */}
+          <Link 
+            to={`/barang/${item.id}`} 
+            className="detail-btn"
+            style={{
+              display: 'block',
+              textAlign: 'center',
+              padding: '10px',
+              background: themeColor,
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '12px',
+              fontWeight: '700',
+              fontSize: '14px', 
+              transition: 'all 0.3s ease',
+              boxShadow: `0 4px 8px ${themeColor}33`
+            }}
+          >
+            Lihat Detail
+          </Link>
+        </div>
       </div>
-    </div>
+    </>
   )
+}
+
+const detailRowStyle = {
+  display: 'flex', 
+  alignItems: 'center', 
+  gap: '8px', 
+  fontSize: '11px', 
+  fontWeight: '600'
 }
 
 export default ItemCard

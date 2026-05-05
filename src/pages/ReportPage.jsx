@@ -1,50 +1,195 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react';
+// Import Lucide icons
+import { UploadCloud, ChevronDown, Building, CalendarDays } from 'lucide-react';
 
-function ReportPage({ onAddItem }) {
-  const [nama, setNama] = useState('')
-  const [kategori, setKategori] = useState('')
-  const [lokasi, setLokasi] = useState('')
+const FormLapor = () => {
+  const [formData, setFormData] = useState({
+    namaBarang: '',
+    kategori: '',
+    gedung: 'Vokasi Veteran - Gedung BNI',
+    lokasi: '',
+    tanggal: '1 Desember 2025',
+    deskripsi: ''
+  });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current.click();
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    onAddItem({
-      nama,
-      kategori,
-      lokasi,
-      deskripsi: '-',
-      status: 'lost',
-      foto: 'https://picsum.photos/400/300',
-      tanggal: new Date().toISOString().split('T')[0],
-      pelapor: 'User'
-    })
-    alert('Laporan terkirim!')
-    setNama('')
-    setKategori('')
-    setLokasi('')
-  }
+    e.preventDefault();
+    console.log('Data:', formData, 'File:', selectedFile);
+  };
 
   return (
-    <div style={{padding: 30, maxWidth: 500, margin: '0 auto'}}>
-      <h1>Lapor Kehilangan</h1>
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Nama Barang" value={nama} onChange={e => setNama(e.target.value)} required style={{width: '100%', padding: 10, marginBottom: 10}} />
-        <select value={kategori} onChange={e => setKategori(e.target.value)} required style={{width: '100%', padding: 10, marginBottom: 10}}>
-          <option value="">Kategori</option>
-          <option>Elektronik</option>
-          <option>Dokumen</option>
-          <option>Dompet</option>
-          <option>Lainnya</option>
-        </select>
-        <select value={lokasi} onChange={e => setLokasi(e.target.value)} required style={{width: '100%', padding: 10, marginBottom: 10}}>
-          <option value="">Lokasi</option>
-          <option>Gedung A</option>
-          <option>Gedung B</option>
-          <option>Gedung C</option>
-        </select>
-        <button type="submit" style={{width: '100%', padding: 10, background: '#2563eb', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer'}}>Kirim</button>
-      </form>
-    </div>
-  )
-}
+    <div 
+      className="bg-gray-100 min-h-screen flex justify-center py-12 px-4" 
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      <div className="bg-white p-8 rounded-[20px] shadow-sm w-full max-w-2xl h-fit">
+        
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleFileChange} 
+          accept="image/*"
+          className="hidden" 
+        />
 
-export default ReportPage
+        {/* Upload Foto Area */}
+        <div 
+          onClick={handleUploadClick}
+          className="bg-[#F8F9FA] rounded-[15px] flex flex-col items-center justify-center py-12 mb-8 cursor-pointer hover:bg-gray-200 transition duration-200"
+        >
+          <UploadCloud className="w-12 h-12 text-[#263859] mb-3" strokeWidth={1.5} />
+          <span className="text-[#263859] font-bold text-[15px]">
+            {selectedFile ? `File: ${selectedFile.name}` : 'Upload Foto Barang'}
+          </span>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+            
+          {/* Nama Barang */}
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Nama Barang <span className="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              name="namaBarang"
+              value={formData.namaBarang}
+              onChange={handleChange}
+              placeholder="Contoh: iPhone 17 Pro Max" 
+              className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Kategori Barang */}
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Kategori Barang <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <select 
+                name="kategori"
+                value={formData.kategori}
+                onChange={handleChange}
+                className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 cursor-pointer"
+              >
+                <option value="" disabled>Pilih Kategori</option>
+                <option value="elektronik">Elektronik</option>
+                <option value="dokumen">Dokumen</option>
+                <option value="lainnya">Lainnya</option>
+              </select>
+              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                <ChevronDown className="w-5 h-5 text-[#263859]" strokeWidth={2.5} />
+              </div>
+            </div>
+          </div>
+
+          {/* Gedung Kehilangan Barang - Icon Warna Orange */}
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Gedung kehilangan barang <span className="text-red-500">*</span>
+            </label>
+            <div className="relative flex items-center bg-[#F8F9FA] rounded-[12px] px-4 py-3.5">
+              {/* Icon diubah jadi warna #EBB134 */}
+              <Building className="w-5 h-5 text-[#EBB134] mr-3" strokeWidth={2} />
+              <select 
+                name="gedung"
+                value={formData.gedung}
+                onChange={handleChange}
+                className="w-full bg-transparent text-sm appearance-none focus:outline-none text-gray-600 cursor-pointer"
+              >
+                <option value="Vokasi Veteran - Gedung BNI">Vokasi Veteran - Gedung BNI</option>
+              </select>
+              <ChevronDown className="w-5 h-5 text-[#263859] absolute right-4 pointer-events-none" strokeWidth={2.5} />
+            </div>
+          </div>
+
+          {/* Lokasi Terakhir */}
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Lokasi Terakhir <span className="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              name="lokasi"
+              value={formData.lokasi}
+              onChange={handleChange}
+              placeholder="Contoh: Lt. 3 ruang 306" 
+              className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Tanggal Hilang - Icon Warna Orange */}
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Tanggal Hilang
+            </label>
+            <div className="relative flex items-center bg-[#F8F9FA] rounded-[12px] px-4 py-3.5">
+              {/* Icon diubah jadi warna #EBB134 */}
+              <CalendarDays className="w-5 h-5 text-[#EBB134] mr-3" strokeWidth={2} />
+              <select 
+                name="tanggal"
+                value={formData.tanggal}
+                onChange={handleChange}
+                className="w-full bg-transparent text-sm appearance-none focus:outline-none text-gray-600 cursor-pointer"
+              >
+                <option value="1 Desember 2025">1 Desember 2025</option>
+              </select>
+              <ChevronDown className="w-5 h-5 text-[#263859] absolute right-4 pointer-events-none" strokeWidth={2.5} />
+            </div>
+          </div>
+
+          {/* Deskripsi */}
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Deskripsi dan ciri ciri <span className="text-red-500">*</span>
+            </label>
+            <textarea 
+              rows="4" 
+              name="deskripsi"
+              value={formData.deskripsi}
+              onChange={handleChange}
+              placeholder="Deskripsikan ciri ciri barang anda" 
+              className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 placeholder-gray-400 resize-none"
+            ></textarea>
+          </div>
+
+          {/* Tombol Aksi */}
+          <div className="flex gap-4 pt-4">
+            <button 
+              type="button" 
+              className="w-1/2 bg-[#263859] hover:bg-[#1a263d] text-white font-semibold py-3.5 px-4 rounded-[12px] transition duration-200 text-[15px]"
+            >
+              Kembali ke beranda
+            </button>
+            <button 
+              type="submit" 
+              className="w-1/2 bg-[#EBB134] hover:bg-[#d19a28] text-white font-semibold py-3.5 px-4 rounded-[12px] transition duration-200 text-[15px]"
+            >
+              Lapor Kehilangan
+            </button>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default FormLapor;

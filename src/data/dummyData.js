@@ -1,52 +1,116 @@
-// Data dummy untuk development (tanpa database)
 export const itemsData = [
   {
     id: 1,
-    nama: 'Laptop ASUS ROG',
+    nama: 'Iphone 17 Pro Max',
     kategori: 'Elektronik',
-    lokasi: 'Gedung A',
-    status: 'lost',  // lost, found, claimed, returned
-    deskripsi: 'Laptop ASUS ROG warna putih, ada stiker di cover',
-    foto: 'https://picsum.photos/400/300?random=1',
-    tanggal: '2026-04-25',
-    pelapor: 'Dwi Kurniawan'
+    lokasi: 'Vokasi Veteran - Gedung BNI',
+    status: 'found',
+    deskripsi: 'Iphone 17 Pro Max warna natural titanium, ada casing bening. Ditemukan di meja Vokantin.',
+    foto: 'https://picsum.photos/seed/iphone/400/300',
+    tanggal: '2025-12-01',
+    pelapor: 'Staff BNI'
   },
   {
     id: 2,
-    nama: 'Flashdisk 32GB',
-    kategori: 'Elektronik',
-    lokasi: 'Gedung B',
-    status: 'found',
-    deskripsi: 'Flashdisk Sandisk hitam, ada gantungan kunci UB',
-    foto: 'https://picsum.photos/400/300?random=2',
-    tanggal: '2026-04-26',
-    pelapor: 'Staff Lab'
+    nama: 'Buku 3726 MDPL',
+    kategori: 'Dokumen',
+    lokasi: 'Vokasi Veteran - Gedung BNI',
+    status: 'lost',
+    deskripsi: 'Buku novel 3726 MDPL, sampul biru, ada pembatas buku.',
+    foto: 'https://picsum.photos/seed/buku/400/300',
+    tanggal: '2025-11-26',
+    pelapor: 'Mahasiswa'
   },
   {
     id: 3,
-    nama: 'KTM Mahasiswa',
-    kategori: 'Dokumen',
-    lokasi: 'Gedung C',
-    status: 'lost',
-    deskripsi: 'KTM atas nama Tania Hertawan',
-    foto: 'https://picsum.photos/400/300?random=3',
-    tanggal: '2026-04-23',
-    pelapor: 'Tania Hertawan'
+    nama: 'Tumbler Tuku KAI',
+    kategori: 'Aksesoris',
+    lokasi: 'Vokasi Veteran - Gedung Perbankan',
+    status: 'found',
+    deskripsi: 'Tumbler stainless steel merk Tuku, warna putih, ada stiker logo.',
+    foto: 'https://picsum.photos/seed/tumbler/400/300',
+    tanggal: '2025-11-29',
+    pelapor: 'Staff Perbankan'
   },
   {
     id: 4,
-    nama: 'Dompet Coklat',
-    kategori: 'Dompet',
-    lokasi: 'Gedung E',
+    nama: 'Asus TUF Gaming',
+    kategori: 'Elektronik',
+    lokasi: 'Vokasi Veteran - Gedung BNI',
+    status: 'lost',
+    deskripsi: 'Laptop Asus TUF Gaming A15, warna hitam, RAM 16GB, ada stiker di cover.',
+    foto: 'https://picsum.photos/seed/asus/400/300',
+    tanggal: '2025-11-26',
+    pelapor: 'Mahasiswa'
+  },
+  {
+    id: 5,
+    nama: 'Labubu Doll',
+    kategori: 'Lainnya',
+    lokasi: 'Vokasi Veteran - Gedung BNI',
     status: 'found',
-    deskripsi: 'Dompet kulit coklat merk Fossil',
-    foto: 'https://picsum.photos/400/300?random=4',
-    tanggal: '2026-04-27',
-    pelapor: 'Staff Kantin'
+    deskripsi: 'Boneka Labubu warna pink, ukuran sedang, kondisi bersih.',
+    foto: 'https://picsum.photos/seed/labubu/400/300',
+    tanggal: '2025-11-29',
+    pelapor: 'Staff Kebersihan'
+  },
+  {
+    id: 6,
+    nama: 'Uang Tunai 100rb',
+    kategori: 'Dompet',
+    lokasi: 'Vokasi Veteran - Gedung BNI',
+    status: 'lost',
+    deskripsi: 'Uang tunai Rp 100.000 dalam amplop putih, hilang di Lt.3 ruang 305.',
+    foto: 'https://picsum.photos/seed/uang/400/300',
+    tanggal: '2025-11-28',
+    pelapor: 'Mahasiswa'
+  },
+  {
+    id: 7,
+    nama: 'Jaket Russ',
+    kategori: 'Pakaian',
+    lokasi: 'Vokasi Dieng',
+    status: 'lost',
+    deskripsi: 'Jaket hoodie merk Russ, warna navy, ukuran L.',
+    foto: 'https://picsum.photos/seed/jaket/400/300',
+    tanggal: '2025-11-26',
+    pelapor: 'Mahasiswa'
+  },
+  {
+    id: 8,
+    nama: 'iWatch Series 9',
+    kategori: 'Elektronik',
+    lokasi: 'Vokasi Dieng',
+    status: 'found',
+    deskripsi: 'Apple Watch Series 9 warna midnight, strap sport band.',
+    foto: 'https://picsum.photos/seed/iwatch/400/300',
+    tanggal: '2025-11-28',
+    pelapor: 'Staff Vocafe'
+  },
+  {
+    id: 9,
+    nama: 'Kunci Motor Honda',
+    kategori: 'Kunci',
+    lokasi: 'Vokasi Veteran - Gedung BNI',
+    status: 'found',
+    deskripsi: 'Kunci motor Honda dengan gantungan kunci logo UB.',
+    foto: 'https://picsum.photos/seed/kunci/400/300',
+    tanggal: '2025-11-30',
+    pelapor: 'Satpam'
+  },
+  {
+    id: 10,
+    nama: 'Flashdisk Toshiba 32GB',
+    kategori: 'Elektronik',
+    lokasi: 'Vokasi Veteran - Gedung Perbankan',
+    status: 'claimed',
+    deskripsi: 'Flashdisk Toshiba 32GB warna putih, ada label "Tugas Akhir".',
+    foto: 'https://picsum.photos/seed/flashdisk/400/300',
+    tanggal: '2025-11-20',
+    pelapor: 'Staff Lab'
   }
 ]
 
-// Data user dummy untuk login
 export const usersData = [
   {
     email: 'dwi@student.ub.ac.id',

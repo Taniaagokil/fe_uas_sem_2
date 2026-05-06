@@ -1,35 +1,35 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { HiOutlineOfficeBuilding } from 'react-icons/hi'
-import { IoLocationSharp, IoCalendarClear } from 'react-icons/io5'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { HiOutlineOfficeBuilding } from 'react-icons/hi';
+import { IoLocationSharp, IoCalendarClear } from 'react-icons/io5';
 
 function ItemCard({ item }) {
-  const themeColor = '#E2B053' 
-  const darkBlue = '#273A5A' // Font warna baru sesuai request kamu
+  const themeColor = '#E2B053'; 
+  const darkBlue = '#273A5A'; 
 
   return (
     <>
       <style>
         {`
-          .item-card {
+          .item-card-hilang {
             transition: all 0.3s ease-in-out;
             cursor: pointer;
           }
-          .item-card:hover {
-            transform: translateY(-10px); /* Kartu naik sedikit */
+          .item-card-hilang:hover {
+            transform: translateY(-10px);
             box-shadow: 0 12px 25px rgba(39, 58, 90, 0.15) !important;
           }
-          .item-card:hover .card-image {
-            transform: scale(1.1); /* Gambar nge-zoom dikit */
+          .item-card-hilang:hover .card-img-hilang {
+            transform: scale(1.1);
           }
-          .item-card:hover .detail-btn {
-            background-color: #273A5A !important; /* Tombol ganti warna pas hover */
-            box-shadow: 0 4px 12px rgba(39, 58, 90, 0.3) !important;
+          .item-card-hilang:hover .detail-btn-hilang {
+            background-color: #1c2b45 !important; /* Biru lebih gelap saat hover */
+            box-shadow: 0 4px 12px rgba(39, 58, 90, 0.4) !important;
           }
         `}
       </style>
 
-      <div className="item-card" style={{
+      <div className="item-card-hilang" style={{
         background: '#F8F9FA',
         borderRadius: '20px', 
         overflow: 'hidden',
@@ -40,11 +40,11 @@ function ItemCard({ item }) {
         position: 'relative'
       }}>
         
-        {/* Container Gambar dengan Animasi Zoom */}
+        {/* Container Gambar */}
         <div style={{ borderRadius: '16px', overflow: 'hidden', height: '150px' }}>
           <img 
-            className="card-image"
-            src={item.foto} 
+            className="card-img-hilang"
+            src={item.foto || item.image || `https://via.placeholder.com/400x300?text=${item.nama}`} 
             alt={item.nama}
             style={{ 
               width: '100%', 
@@ -60,20 +60,6 @@ function ItemCard({ item }) {
 
         {/* Info Content */}
         <div style={{ padding: '12px 6px 4px 6px' }}>
-          
-          {/* Badge Kategori */}
-          <div style={{
-            display: 'inline-block',
-            background: darkBlue,
-            color: 'white',
-            padding: '4px 14px',
-            borderRadius: '20px',
-            fontSize: '11px', 
-            fontWeight: '700',
-            marginBottom: '8px'
-          }}>
-            {item.kategori}
-          </div>
 
           {/* Nama Barang */}
           <h3 style={{ 
@@ -88,15 +74,15 @@ function ItemCard({ item }) {
             {item.nama}
           </h3>
           
-          {/* Detail List - Warna font sudah #273A5A */}
+          {/* Detail List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
             <div style={{...detailRowStyle, color: darkBlue}}>
               <HiOutlineOfficeBuilding style={{ color: themeColor, fontSize: '15px' }} />
-              <span style={{ opacity: 0.8 }}>{item.instansi || 'Vokasi Veteran'}</span>
+              <span style={{ opacity: 0.8 }}>{item.lokasi || item.instansi || 'Vokasi Veteran'}</span>
             </div>
             <div style={{...detailRowStyle, color: darkBlue}}>
               <IoLocationSharp style={{ color: themeColor, fontSize: '15px' }} />
-              <span style={{ opacity: 0.8 }}>{item.lokasi}</span>
+              <span style={{ opacity: 0.8 }}>{item.lokasiDetail || item.lokasi}</span>
             </div>
             <div style={{...detailRowStyle, color: darkBlue}}>
               <IoCalendarClear style={{ color: themeColor, fontSize: '15px' }} />
@@ -104,30 +90,31 @@ function ItemCard({ item }) {
             </div>
           </div>
 
-          {/* Tombol Detail dengan Animasi Hover */}
-          <Link 
-            to={`/barang/${item.id}`} 
-            className="detail-btn"
+          {/* Tombol Biru - Hubungi Staff */}
+          <button 
+            className="detail-btn-hilang"
+            onClick={() => alert('Fitur Hubungi Staff berjalan!')} // Ganti dengan fungsi chat WA/Email nanti
             style={{
+              width: '100%',
               display: 'block',
               textAlign: 'center',
               padding: '10px',
-              background: themeColor,
+              background: darkBlue,
               color: 'white',
-              textDecoration: 'none',
+              border: 'none',
+              cursor: 'pointer',
               borderRadius: '12px',
               fontWeight: '700',
               fontSize: '14px', 
               transition: 'all 0.3s ease',
-              boxShadow: `0 4px 8px ${themeColor}33`
             }}
           >
-            Lihat Detail
-          </Link>
+            Hubungi Staff
+          </button>
         </div>
       </div>
     </>
-  )
+  );
 }
 
 const detailRowStyle = {
@@ -136,6 +123,6 @@ const detailRowStyle = {
   gap: '8px', 
   fontSize: '11px', 
   fontWeight: '600'
-}
+};
 
-export default ItemCard
+export default ItemCard;

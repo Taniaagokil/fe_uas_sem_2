@@ -1,273 +1,157 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { HiOutlineOfficeBuilding } from 'react-icons/hi';
+import { IoLocationSharp, IoCalendarClear } from 'react-icons/io5';
 
-function BarangTemuanFound() {
-  // Data barang temuan
-  const barangTemuan = [
-    {
-      id: 1,
-      kategori: 'Elektronik',
-      nama: 'Iphone 17 Pro Max',
-      lokasi: 'Vokasi Veteran - Gedung BNI',
-      lokasiDetail: 'Meja Vokantin',
-      tanggal: '1 Desember 2025',
-      status: 'found'
-    },
-    {
-      id: 2,
-      kategori: 'Botol',
-      nama: 'Tumblr Tuku KAI',
-      lokasi: 'Vokasi Veteran - Gedung Perbankan',
-      lokasiDetail: 'Lt. 2',
-      tanggal: '29 November 2025',
-      status: 'found'
-    },
-    {
-      id: 3,
-      kategori: 'Boneka',
-      nama: 'Labubu',
-      lokasi: 'Vokasi Veteran - Gedung BNI',
-      lokasiDetail: 'Toilet Adbis',
-      tanggal: '29 November 2025',
-      status: 'found'
-    },
-    {
-      id: 4,
-      kategori: 'Elektronik',
-      nama: 'i watch',
-      lokasi: 'Vokasi Dieng',
-      lokasiDetail: 'Vocafe',
-      tanggal: '28 November',
-      status: 'found'
-    }
-  ]
-
-  // Konfigurasi ikon berdasarkan kategori
-  const kategoriIcons = {
-    elektronik: '📱',
-    botol: '🍶',
-    boneka: '🧸'
-  }
-
-  const styles = {
-    container: {
-      maxWidth: '420px',
-      margin: '0 auto',
-      background: 'white',
-      borderRadius: '20px',
-      padding: '24px 20px',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      boxShadow: '0 2px 20px rgba(0,0,0,0.08)'
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      marginBottom: '24px'
-    },
-    headerIcon: {
-      width: '44px',
-      height: '44px',
-      borderRadius: '12px',
-      background: 'linear-gradient(135deg, #4A90D9, #357ABD)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '22px',
-      color: 'white'
-    },
-    headerTitle: {
-      fontSize: '22px',
-      fontWeight: '700',
-      color: '#1a1a1a',
-      margin: 0
-    },
-    headerHighlight: {
-      color: '#4A90D9'
-    },
-    sectionLabel: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      marginBottom: '16px'
-    },
-    sectionBar: {
-      width: '4px',
-      height: '20px',
-      background: '#4A90D9',
-      borderRadius: '2px'
-    },
-    sectionText: {
-      fontSize: '16px',
-      fontWeight: '700',
-      color: '#1a1a1a',
-      margin: 0
-    },
-    cardList: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '10px'
-    },
-    card: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      padding: '14px',
-      border: '1.5px solid #e8e8e8',
-      borderRadius: '14px',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      background: 'white'
-    },
-    cardIcon: {
-      width: '46px',
-      height: '46px',
-      borderRadius: '12px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '22px',
-      flexShrink: 0
-    },
-    cardContent: {
-      flex: 1,
-      minWidth: 0
-    },
-    kategoriBadge: {
-      display: 'inline-block',
-      fontSize: '10px',
-      fontWeight: '600',
-      padding: '3px 8px',
-      borderRadius: '20px',
-      marginBottom: '4px',
-      letterSpacing: '0.3px'
-    },
-    namaBarang: {
-      fontSize: '15px',
-      fontWeight: '700',
-      color: '#1a1a1a',
-      margin: '0 0 3px 0'
-    },
-    infoText: {
-      fontSize: '12px',
-      color: '#999',
-      margin: '0 0 1px 0',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '4px'
-    },
-    detailLink: {
-      fontSize: '12px',
-      fontWeight: '600',
-      color: '#4A90D9',
-      textDecoration: 'none',
-      marginTop: '4px',
-      display: 'inline-block',
-      cursor: 'pointer'
-    },
-    arrowIcon: {
-      fontSize: '18px',
-      color: '#ccc',
-      flexShrink: 0
-    }
-  }
+function CardTemuan({ item, isNew }) {
+  const themeColor = '#E2B053'; // Kuning gold
+  const darkBlue = '#273A5A'; // Biru gelap
 
   return (
-    <div style={styles.container}>
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerIcon}>📦</div>
-        <h1 style={styles.headerTitle}>
-          Barang Temuan <span style={styles.headerHighlight}>Found</span>
-        </h1>
-      </div>
-
-      {/* Section: Baru Ditemukan */}
-      <div style={styles.sectionLabel}>
-        <div style={styles.sectionBar}></div>
-        <h2 style={styles.sectionText}>Baru Ditemukan</h2>
-      </div>
-
-      {/* List Card */}
-      <div style={styles.cardList}>
-        {barangTemuan.map((item) => {
-          const kat = item.kategori.toLowerCase()
-          const icon = kategoriIcons[kat] || '📦'
-          
-          // Warna berdasarkan kategori
-          const colors = {
-            elektronik: { bg: '#E8F0FE', text: '#4A90D9', badgeBg: '#E8F0FE', badgeText: '#4A90D9' },
-            botol: { bg: '#E8F8F0', text: '#2ECC71', badgeBg: '#E8F8F0', badgeText: '#2ECC71' },
-            boneka: { bg: '#FFF0F0', text: '#E74C3C', badgeBg: '#FFF0F0', badgeText: '#E74C3C' }
+    <>
+      <style>
+        {`
+          .card-temuan {
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
           }
-          const color = colors[kat] || { bg: '#F0F0F0', text: '#666', badgeBg: '#F0F0F0', badgeText: '#666' }
+          .card-temuan:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(39, 58, 90, 0.15) !important;
+          }
+          .card-temuan:hover .card-img-temuan {
+            transform: scale(1.1);
+          }
+          .card-temuan:hover .detail-btn-temuan {
+            background-color: #d19f42 !important; /* Kuning lebih gelap saat hover */
+            box-shadow: 0 4px 12px rgba(226, 176, 83, 0.4) !important;
+          }
+        `}
+      </style>
 
-          return (
-            <div 
-              key={item.id}
-              style={styles.card}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#4A90D9'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(74, 144, 217, 0.1)'
-                e.currentTarget.style.transform = 'translateY(-1px)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#e8e8e8'
-                e.currentTarget.style.boxShadow = 'none'
-                e.currentTarget.style.transform = 'translateY(0)'
-              }}
-            >
-              {/* Ikon Kategori */}
-              <div style={{
-                ...styles.cardIcon,
-                backgroundColor: color.bg,
-                color: color.text
-              }}>
-                {icon}
-              </div>
+      <div className="card-temuan" style={{
+        background: '#F8F9FA',
+        borderRadius: '20px', 
+        overflow: 'hidden',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
+        fontFamily: "'Montserrat', sans-serif",
+        padding: '10px', 
+        maxWidth: '280px',
+        position: 'relative'
+      }}>
+        
+        {/* Label Baru Ditemukan (Opsional, muncul jika props isNew = true) */}
+        {isNew && (
+          <div style={{
+            position: 'absolute',
+            top: '10px',
+            left: '10px',
+            background: '#E74C3C', // Warna merah sesuai foto
+            color: 'white',
+            padding: '4px 12px',
+            borderRadius: '12px 0 12px 0',
+            fontSize: '10px',
+            fontWeight: 'bold',
+            zIndex: 10
+          }}>
+            Baru Ditemukan
+          </div>
+        )}
 
-              {/* Konten */}
-              <div style={styles.cardContent}>
-                {/* Badge Kategori */}
-                <span style={{
-                  ...styles.kategoriBadge,
-                  backgroundColor: color.badgeBg,
-                  color: color.badgeText
-                }}>
-                  {item.kategori}
-                </span>
-                
-                {/* Nama Barang */}
-                <h3 style={styles.namaBarang}>{item.nama}</h3>
-                
-                {/* Lokasi */}
-                <p style={styles.infoText}>📍 {item.lokasi}</p>
-                
-                {/* Lokasi Detail */}
-                <p style={styles.infoText}>📍 {item.lokasiDetail}</p>
-                
-                {/* Tanggal */}
-                <p style={styles.infoText}>📅 {item.tanggal}</p>
-                
-                {/* Link Detail */}
-                <Link 
-                  to={`/barang/${item.id}`} 
-                  style={styles.detailLink}
-                  onMouseEnter={(e) => e.target.style.color = '#2a6db5'}
-                  onMouseLeave={(e) => e.target.style.color = '#4A90D9'}
-                >
-                  Lihat Detail
-                </Link>
-              </div>
+        {/* Container Gambar */}
+        <div style={{ borderRadius: '16px', overflow: 'hidden', height: '150px', position: 'relative' }}>
+          <img 
+            className="card-img-temuan"
+            src={item.foto || item.image || `https://via.placeholder.com/400x300?text=${item.nama}`} 
+            alt={item.nama}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover',
+              transition: 'transform 0.5s ease' 
+            }}
+            onError={(e) => {
+              e.target.src = `https://via.placeholder.com/400x300?text=${item.nama}`
+            }}
+          />
+        </div>
 
-              {/* Arrow */}
-              <span style={styles.arrowIcon}>›</span>
+        {/* Info Content */}
+        <div style={{ padding: '12px 6px 4px 6px' }}>
+          {/* Badge Kategori */}
+          <div style={{
+            display: 'inline-block',
+            background: darkBlue,
+            color: 'white',
+            padding: '4px 14px',
+            borderRadius: '20px',
+            fontSize: '11px', 
+            fontWeight: '700',
+            marginBottom: '8px'
+          }}>
+            {item.kategori}
+          </div>
+
+          {/* Nama Barang */}
+          <h3 style={{ 
+            margin: '0 0 10px 0', 
+            fontSize: '16px', 
+            fontWeight: '800', 
+            color: darkBlue,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis' 
+          }}>
+            {item.nama}
+          </h3>
+          
+          {/* Detail List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
+            <div style={{...detailRowStyle, color: darkBlue}}>
+              <HiOutlineOfficeBuilding style={{ color: themeColor, fontSize: '15px' }} />
+              <span style={{ opacity: 0.8 }}>{item.lokasi || item.instansi || 'Vokasi Veteran'}</span>
             </div>
-          )
-        })}
+            <div style={{...detailRowStyle, color: darkBlue}}>
+              <IoLocationSharp style={{ color: themeColor, fontSize: '15px' }} />
+              <span style={{ opacity: 0.8 }}>{item.lokasiDetail || item.lokasi}</span>
+            </div>
+            <div style={{...detailRowStyle, color: darkBlue}}>
+              <IoCalendarClear style={{ color: themeColor, fontSize: '15px' }} />
+              <span style={{ opacity: 0.8 }}>{item.tanggal}</span>
+            </div>
+          </div>
+
+          {/* Tombol Kuning - Lihat Detail */}
+          <Link 
+            to={`/barang/${item.id}`} 
+            className="detail-btn-temuan"
+            style={{
+              display: 'block',
+              textAlign: 'center',
+              padding: '10px',
+              background: themeColor,
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '12px',
+              fontWeight: '700',
+              fontSize: '14px', 
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Lihat Detail
+          </Link>
+        </div>
       </div>
-    </div>
-  )
+    </>
+  );
 }
 
-export default BarangTemuanFound
+const detailRowStyle = {
+  display: 'flex', 
+  alignItems: 'center', 
+  gap: '8px', 
+  fontSize: '11px', 
+  fontWeight: '600'
+};
+
+export default CardTemuan;

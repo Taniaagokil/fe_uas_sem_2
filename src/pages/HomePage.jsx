@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ItemCard from '../components/ItemCard';
 import FilterBar from '../components/FilterBar';
+import CardTemuan from '../components/CardTemuan';
 import { IoSearch } from 'react-icons/io5';
 import { HiOutlineClipboardList } from 'react-icons/hi';
 
@@ -14,6 +15,7 @@ import vokasiDieng from '../img/vokasi_dieng.jpg';
 import vokasiKp from '../img/vokasi_kp.jpg';
 
 function HomePage({ items }) {
+  // Memisahkan item berdasarkan status
   const lostItems = items.filter(item => item.status === 'lost').slice(0, 4);
   const foundItems = items.filter(item => item.status === 'found').slice(0, 4);
 
@@ -57,11 +59,11 @@ function HomePage({ items }) {
 
       <FilterBar />
 
-      {/* 3. Section Dicari Barang Hilang */}
+      {/* 3. Section Barang Temuan (FOUND) - Menggunakan CardTemuan */}
       <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h2 style={{ color: mainColor, fontWeight: 700, fontSize: '22px' }}>
-            Dicari Barang Hilang <span style={{ color: accentGold }}>Lost</span>
+            Barang Temuan <span style={{ color: accentGold }}>Found</span>
           </h2>
           
           <div style={{ display: 'flex', alignItems: 'center', background: '#F3F4F6', borderRadius: '50px', padding: '6px 15px', width: '230px' }}>
@@ -75,18 +77,20 @@ function HomePage({ items }) {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
-          {lostItems.map(item => <ItemCard key={item.id} item={item} />)}
+          {foundItems.map((item, index) => (
+            // Menggunakan CardTemuan dengan prop isNew untuk item pertama
+            <CardTemuan key={item.id} item={item} isNew={index === 0} />
+          ))}
         </div>
       </div>
 
-      {/* 4. Section Barang Temuan */}
+      {/* 4. Section Dicari Barang Hilang (LOST) - Menggunakan ItemCard */}
       <div style={{ maxWidth: '1200px', margin: '60px auto', padding: '0 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h2 style={{ color: mainColor, fontWeight: 700, fontSize: '22px' }}>
-            Barang Temuan <span style={{ color: accentGold }}>Found</span>
+            Dicari Barang Hilang <span style={{ color: accentGold }}>Lost</span>
           </h2>
           
-          {/* Tombol Lapor - Teks sudah warna #273A5A */}
           <Link to="/lapor" style={{ 
             display: 'flex', 
             alignItems: 'center', 
@@ -105,7 +109,10 @@ function HomePage({ items }) {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
-          {foundItems.map(item => <ItemCard key={item.id} item={item} />)}
+          {lostItems.map(item => (
+            // Menggunakan ItemCard untuk barang hilang
+            <ItemCard key={item.id} item={item} />
+          ))}
         </div>
       </div>
     </div>

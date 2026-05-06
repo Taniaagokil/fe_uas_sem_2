@@ -10,6 +10,7 @@ import FoundItemsPage from './pages/FoundItemsPage'
 import ReportPage from './pages/ReportPage'
 import ItemDetailPage from './pages/ItemDetailPage'
 import ProfilePage from './pages/ProfilePage'
+import RiwayatClaimPage from './pages/RiwayatClaimPage'
 import ScrollToTop from './components/ScrollToTop' // Import ini
 import { itemsData } from './data/dummyData'
 
@@ -55,6 +56,7 @@ function App() {
           <Route path="/lapor" element={<ReportPage onAddItem={handleAddItem} />} />
           <Route path="/barang/:id" element={<ItemDetailPage items={items} />} />
           <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+          <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
         </Routes>
       </div>
       

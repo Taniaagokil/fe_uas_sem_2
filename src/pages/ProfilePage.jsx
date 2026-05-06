@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
 import './ProfilePage.css';
 
 function ProfilePage({ user, onLogout }) {
@@ -55,15 +55,18 @@ function ProfilePage({ user, onLogout }) {
 
           {/* Tombol Aksi */}
           <div className="button-group-vertical">
-            <button 
-              className="btn-action-outline" 
-              onClick={() => alert('Fitur Riwayat Klaim sedang dikembangkan!')}
+            {/* Link dibuat display block dan width 100% agar kontainer tombol memanjang penuh */}
+            <Link 
+              to="/riwayat-claim" 
+              style={{ textDecoration: 'none', width: '100%', display: 'block' }}
             >
-               Riwayat Klaim Barang
-            </button>
+              <button className="btn-action-outline" style={{ width: '100%' }}>
+                Riwayat Klaim Barang
+              </button>
+            </Link>
             
             <button className="btn-action-logout" onClick={handleLogoutAction}>
-               Keluar dari Akun
+              Keluar dari Akun
             </button>
           </div>
         </div>

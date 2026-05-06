@@ -7,7 +7,7 @@ import HomePage from './pages/HomePage'
 import LostItemsPage from './pages/LostItemsPage'
 import FoundItemsPage from './pages/FoundItemsPage'
 import ReportPage from './pages/ReportPage'
-import ItemDetailPage from './pages/ItemDetailPage'
+import TemuanDetailPage from './pages/TemuanDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import ScrollToTop from './components/ScrollToTop' // Import ini
 import { itemsData } from './data/dummyData'
@@ -52,8 +52,10 @@ function App() {
           <Route path="/barang-hilang" element={<LostItemsPage items={items} />} />
           <Route path="/barang-ditemukan" element={<FoundItemsPage items={items} />} />
           <Route path="/lapor" element={<ReportPage onAddItem={handleAddItem} />} />
-          <Route path="/barang/:id" element={<ItemDetailPage items={items} />} />
+          {/* FIX: Hanya gunakan satu Route untuk detail barang */}
+          <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
           <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+          <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
         </Routes>
       </div>
       

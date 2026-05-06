@@ -1,0 +1,150 @@
+/* Import Montserrat */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+.temuan-detail-container {
+  font-family: 'Montserrat', sans-serif;
+  /* Kurangi padding atas agar lebih naik */
+  padding: -80px 10% 60px 10%; 
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  min-height: calc(100vh - 70px);
+}
+
+.temuan-detail-card {
+  max-width: 1100px;
+  width: 100%;
+}
+
+.temuan-title-header {
+  font-size: 24px;
+  font-weight: 800;
+  color: #2D3E5E;
+  /* Kurangi margin bottom judul */
+  margin-bottom: 25px; 
+  letter-spacing: -0.5px;
+}
+
+.text-yellow {
+  color: #E2B053;
+}
+
+.temuan-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Kurangi gap jika dirasa terlalu renggang */
+  gap: 30px; 
+  align-items: flex-start;
+}
+
+.temuan-image-wrapper .temuan-img-fluid {
+  width: 100%;
+  aspect-ratio: 1/1; 
+  object-fit: cover;
+  border-radius: 30px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+/* Bagian Kanan agar tidak terlalu turun */
+.temuan-info-wrapper {
+  padding-top: 5px; 
+}
+
+.temuan-badge-category {
+  background-color: #2D3E5E;
+  color: #fff;
+  padding: 6px 20px;
+  border-radius: 50px;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 15px; /* Kurangi margin */
+  text-transform: capitalize;
+}
+
+.temuan-item-name {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2D3E5E;
+  margin-bottom: 20px; /* Kurangi margin */
+  line-height: 1.2;
+}
+
+.temuan-meta-data {
+  margin-bottom: 30px; /* Kurangi margin */
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #2D3E5E;
+  font-weight: 500;
+}
+
+.meta-icon-styled {
+  font-size: 20px;
+}
+
+.temuan-description-box h3 {
+  font-size: 18px;
+  color: #2D3E5E;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.temuan-description-box p {
+  color: #5a6475;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.temuan-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 35px; /* Kurangi margin top tombol */
+}
+
+.btn-navy-back, .btn-yellow-claim {
+  width: 100%;
+  padding: 14px; /* Sedikit lebih kecil agar compact */
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-navy-back {
+  background-color: #2D3E5E;
+  color: white;
+}
+
+.btn-yellow-claim {
+  background-color: #E2B053;
+  color: white;
+}
+
+/* Animasi tetap sama */
+.animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+.animate-slide-up { animation: slideUp 0.8s ease-out forwards; }
+.animate-slide-up-delayed { 
+  opacity: 0; 
+  animation: slideUp 0.8s ease-out 0.2s forwards; 
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .temuan-grid-layout { grid-template-columns: 1fr; gap: 30px; }
+  .temuan-detail-container { padding: 20px 5%; }
+}

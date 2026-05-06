@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import Filterbar from './components/Filterbar'
 import LoginModal from './components/LoginModal'
 import HomePage from './pages/HomePage'
 import LostItemsPage from './pages/LostItemsPage'
 import FoundItemsPage from './pages/FoundItemsPage'
 import ReportPage from './pages/ReportPage'
-import ItemDetailPage from './pages/ItemDetailPage'
+import TemuanDetailPage from './pages/TemuanDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import RiwayatClaimPage from './pages/RiwayatClaimPage'
 import ScrollToTop from './components/ScrollToTop' // Import ini
@@ -54,9 +53,15 @@ function App() {
           <Route path="/barang-hilang" element={<LostItemsPage items={items} />} />
           <Route path="/barang-ditemukan" element={<FoundItemsPage items={items} />} />
           <Route path="/lapor" element={<ReportPage onAddItem={handleAddItem} />} />
-          <Route path="/barang/:id" element={<ItemDetailPage items={items} />} />
+          {/* FIX: Hanya gunakan satu Route untuk detail barang */}
+          <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
           <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+
           <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
+
+          <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
+          <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
+
         </Routes>
       </div>
       

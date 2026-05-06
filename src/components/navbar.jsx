@@ -11,6 +11,7 @@ function Navbar({ user, onLogout }) {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
+    
     <nav className="navbar-container">
       <div className="navbar-content">
         {/* Logo Sisi Kiri */}

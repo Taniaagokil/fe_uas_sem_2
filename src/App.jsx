@@ -9,6 +9,7 @@ import FoundItemsPage from './pages/FoundItemsPage'
 import ReportPage from './pages/ReportPage'
 import TemuanDetailPage from './pages/TemuanDetailPage'
 import ProfilePage from './pages/ProfilePage'
+import RiwayatClaimPage from './pages/RiwayatClaimPage'
 import ScrollToTop from './components/ScrollToTop' // Import ini
 import { itemsData } from './data/dummyData'
 
@@ -55,7 +56,11 @@ function App() {
           {/* FIX: Hanya gunakan satu Route untuk detail barang */}
           <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
           <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+<<<<<<< HEAD
           <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
+=======
+          <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
+>>>>>>> 2cab26d (slicing riwayat claim dan fix profil page)
         </Routes>
       </div>
       

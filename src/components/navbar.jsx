@@ -2,64 +2,52 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './navbar.css';
 
-function Navbar({ user, onLogout }) {
+function Navbar({ user, onOpenLogin }) {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
-
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    
     <nav className="navbar-container">
       <div className="navbar-content">
-        {/* Logo Sisi Kiri */}
         <Link to="/" className="navbar-logo" onClick={() => setIsOpen(false)}>
           <img src="/src/img/vokasi.jpg" alt="Logo Vokasi" />
         </Link>
 
-        {/* Hamburger Icon (Hanya muncul di Mobile) */}
         <div className={`hamburger ${isOpen ? 'active' : ''}`} onClick={toggleMenu}>
           <span className="bar"></span>
           <span className="bar"></span>
           <span className="bar"></span>
         </div>
 
-        {/* Wrapper Menu (Desktop: Ke Kanan | Mobile: Dropdown) */}
         <div className={`nav-menu-wrapper ${isOpen ? 'open' : ''}`}>
           <div className="navbar-links">
-            <Link 
-              to="/" 
-              className={isActive('/') ? 'active' : ''} 
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/" className={isActive('/') ? 'active' : ''} onClick={() => setIsOpen(false)}>
               Lihat Barang
             </Link>
-            <Link 
-              to="/lapor" 
-              className={isActive('/lapor') ? 'active' : ''} 
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/lapor" className={isActive('/lapor') ? 'active' : ''} onClick={() => setIsOpen(false)}>
               Lapor kehilangan
             </Link>
           </div>
 
           <div className="navbar-auth">
             {user ? (
-              <div className="user-profile">
-                <span className="user-name">👤 {user.nama}</span>
-                <button 
-                  onClick={() => { onLogout(); setIsOpen(false); }} 
-                  className="btn-logout"
-                >
-                  Keluar
-                </button>
-              </div>
-            ) : (
-              <Link to="/login" className="btn-login" onClick={() => setIsOpen(false)}>
-                Masuk
+              <Link to="/profile" className="btn-profile-nav" onClick={() => setIsOpen(false)}>
+                <div className="profile-info-wrapper">
+                  <span className="profile-label">Profile Saya</span>
+                  <span className="profile-user-name">{user.nama}</span>
+                </div>
+                <div className="profile-icon-nav">👤</div>
               </Link>
+            ) : (
+              <button 
+                className="btn-login" 
+                onClick={() => { onOpenLogin(); setIsOpen(false); }}
+              >
+                Masuk
+              </button>
             )}
           </div>
         </div>

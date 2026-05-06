@@ -10,6 +10,7 @@ import ReportPage from './pages/ReportPage'
 import TemuanDetailPage from './pages/TemuanDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import RiwayatClaimPage from './pages/RiwayatClaimPage'
+import KlaimBarangPage from './pages/KlaimBarangPage';
 import ScrollToTop from './components/ScrollToTop' // Import ini
 import { itemsData } from './data/dummyData'
 
@@ -61,6 +62,7 @@ function App() {
 
           <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
           <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
+          <Route path="/klaim/:id" element={<KlaimBarangPage items={items} />} />
 
         </Routes>
       </div>

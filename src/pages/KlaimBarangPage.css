@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap');
+
+.klaim-page-container { font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; padding: 40px 20px; background-color: #fff; }
+.klaim-wrapper { width: 100%; max-width: 800px; }
+
+/* Font Weight Control */
+.text-extra-bold { font-weight: 800; color: #2D3E50; }
+.text-bold { font-weight: 700; color: #2D3E50; }
+.text-regular { font-weight: 400 !important; }
+
+.klaim-header-text { font-size: 32px; margin-bottom: 30px; }
+.text-yellow { color: #E2B053; }
+.text-danger { color: #d9534f; }
+
+/* Card Style */
+.klaim-preview-card { display: flex; gap: 25px; padding: 25px; border: 1px solid #f0f0f0; border-radius: 15px; margin-bottom: 35px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+.klaim-image-box img { width: 150px; height: 150px; object-fit: cover; border-radius: 12px; }
+.item-title-name { font-size: 24px; margin: 8px 0; }
+.item-metadata { display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; }
+.meta-line { display: flex; align-items: center; gap: 10px; color: #555; }
+.icon-gold-style { color: #E2B053; font-size: 20px; }
+
+/* Form & Input */
+.form-input-group { margin-bottom: 22px; }
+.form-input-group label { display: block; margin-bottom: 10px; font-size: 16px; }
+.klaim-input { width: 100%; padding: 15px; border-radius: 12px; border: none; background: #F5F5F5; font-family: 'Montserrat'; outline: none; }
+
+/* Upload Box Centered */
+.upload-container { width: 100%; height: 160px; background: #fafafa; border: 2px dashed #ccc; border-radius: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+.upload-inner-content { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.icon-upload-center { font-size: 50px; color: #2D3E50; }
+
+/* Buttons & Klik Animasi */
+.klaim-btn-row { display: flex; gap: 15px; margin-top: 30px; }
+.btn-back-navy, .btn-submit-gold { flex: 1; padding: 18px; border-radius: 12px; border: none; cursor: pointer; color: white; transition: 0.2s; }
+.btn-back-navy { background: #2D3E50; }
+.btn-submit-gold { background: #E2B053; }
+
+.klik-bounce:active { transform: scale(0.96); }
+.loading { opacity: 0.7; transform: scale(0.96); cursor: not-allowed; }
+
+/* MODAL POPUP ANIMATION */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
+.modal-card { background: white; padding: 45px; border-radius: 25px; text-align: center; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.check-circle { width: 70px; height: 70px; background: #E2B053; color: white; font-size: 35px; line-height: 70px; border-radius: 50%; margin: 0 auto 20px; }
+
+.animate-bounce-in {
+  animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.animate-fade-in-page { animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

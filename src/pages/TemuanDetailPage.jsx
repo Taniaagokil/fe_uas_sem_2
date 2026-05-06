@@ -78,9 +78,12 @@ function TemuanDetailPage({ items }) {
               <button className="btn-navy-back" onClick={() => navigate('/')}>
                 Kembali ke beranda
               </button>
-              <button className="btn-yellow-claim" onClick={() => alert('Form klaim akan segera dibuka!')}>
-                Ajukan Klaim
-              </button>
+              <button 
+  className="btn-yellow-claim" 
+  onClick={() => navigate(`/klaim/${item.id}`)}
+>
+  Ajukan Klaim
+</button>
             </div>
           </div>
         </div>

@@ -1,0 +1,123 @@
+/* RiwayatClaimPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+.riwayat-claim-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.riwayat-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #273A5A;
+    margin-bottom: 25px;
+}
+
+.riwayat-title span {
+    color: #E2B053;
+}
+
+.claim-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.claim-card {
+    display: flex;
+    background-color: #F8F9FA;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    position: relative;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.claim-image-wrapper {
+    width: 160px;
+    height: 140px;
+    border-radius: 15px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.claim-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.claim-content {
+    flex: 1;
+    padding-right: 140px;
+}
+
+.claim-category {
+    display: inline-block;
+    background-color: #273A5A;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.claim-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: #273A5A;
+    margin: 0 0 12px 0;
+}
+
+.claim-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-row span {
+    color: #273A5A;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.btn-pickup {
+    margin-top: 15px;
+    background-color: #E2B053;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(226, 176, 83, 0.3);
+    width: fit-content;
+    min-width: 220px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.status-badge {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}

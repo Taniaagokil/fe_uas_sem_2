@@ -1,12 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { IoLocationSharp, IoCalendarClear } from 'react-icons/io5';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'; 
 import { FaCheck, FaTimes } from 'react-icons/fa'; 
-// 1. Install framer-motion (npm install framer-motion)
 import { motion } from 'framer-motion'; 
+import './RiwayatClaimPage.css'; // Import file CSS
 
 const RiwayatClaimPage = () => {
+  const navigate = useNavigate();
+
   const claimHistory = [
     {
       id: 1,
@@ -42,7 +45,7 @@ const RiwayatClaimPage = () => {
       status: "Klaim Diterima",
       statusColor: "#5CB85C",
       icon: <FaCheck style={{ fontSize: '12px' }} />,
-      image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500",
+      image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500",
       canPickup: true
     },
     {
@@ -59,10 +62,9 @@ const RiwayatClaimPage = () => {
     }
   ];
 
-  const darkBlue = '#273A5A';
   const yellowTheme = '#E2B053';
 
-  // Varians untuk animasi list
+  // Varians Animasi
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -82,98 +84,64 @@ const RiwayatClaimPage = () => {
 
   return (
     <motion.div 
+      className="riwayat-claim-container"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      style={{ maxWidth: '900px', margin: '40px auto', padding: '0 20px', fontFamily: "'Montserrat', sans-serif" }}
     >
       <motion.h2 
+        className="riwayat-title"
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        style={{ fontSize: '24px', fontWeight: '800', color: darkBlue, marginBottom: '25px' }}
       >
-        Pengajuan Klaim <span style={{ color: yellowTheme }}>Barang</span>
+        Pengajuan Klaim <span>Barang</span>
       </motion.h2>
 
       <motion.div 
+        className="claim-list-wrapper"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
       >
         {claimHistory.map((item) => (
           <motion.div 
             key={item.id} 
+            className="claim-card"
             variants={itemVariants}
-            whileHover={{ scale: 1.01 }} // Animasi sedikit membesar saat kursor di atasnya
-            style={{
-              display: 'flex',
-              backgroundColor: '#F8F9FA',
-              borderRadius: '20px',
-              padding: '18px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
-              position: 'relative',
-              gap: '20px',
-              alignItems: 'flex-start'
-            }}
+            whileHover={{ scale: 1.01 }}
           >
-            
             {/* Foto Barang */}
-            <div style={{ width: '160px', height: '140px', borderRadius: '15px', overflow: 'hidden', flexShrink: 0 }}>
-              <img src={item.image} alt={item.nama} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div className="claim-image-wrapper">
+              <img src={item.image} alt={item.nama} />
             </div>
 
             {/* Info Konten */}
-            <div style={{ flex: 1, paddingRight: '140px' }}>
-              <div style={{ 
-                display: 'inline-block', 
-                backgroundColor: darkBlue, 
-                color: 'white', 
-                padding: '4px 12px', 
-                borderRadius: '8px', 
-                fontSize: '10px', 
-                fontWeight: '700',
-                marginBottom: '8px'
-              }}>
-                {item.kategori}
-              </div>
+            <div className="claim-content">
+              <div className="claim-category">{item.kategori}</div>
+              <h3 className="claim-name">{item.nama}</h3>
 
-              <h3 style={{ fontSize: '20px', fontWeight: '800', color: darkBlue, margin: '0 0 12px 0' }}>
-                {item.nama}
-              </h3>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div style={detailRowStyle}>
+              <div className="claim-details">
+                <div className="detail-row">
                   <HiOutlineOfficeBuilding style={{ color: yellowTheme, fontSize: '16px' }} />
-                  <span style={{ color: darkBlue, fontWeight: '600', fontSize: '13px' }}>{item.lokasi}</span>
+                  <span>{item.lokasi}</span>
                 </div>
-                <div style={detailRowStyle}>
+                <div className="detail-row">
                   <IoLocationSharp style={{ color: yellowTheme, fontSize: '16px' }} />
-                  <span style={{ color: darkBlue, fontWeight: '600', fontSize: '13px' }}>{item.detail}</span>
+                  <span>{item.detail}</span>
                 </div>
-                <div style={detailRowStyle}>
+                <div className="detail-row">
                   <IoCalendarClear style={{ color: yellowTheme, fontSize: '16px' }} />
-                  <span style={{ color: darkBlue, fontWeight: '600', fontSize: '13px' }}>{item.waktu}</span>
+                  <span>{item.waktu}</span>
                 </div>
               </div>
 
               {item.canPickup && (
-                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <div style={{ display: 'flex' }}>
                   <motion.button 
-                    whileTap={{ scale: 0.95 }} // Efek saat tombol ditekan
-                    style={{
-                      marginTop: '15px',
-                      backgroundColor: yellowTheme,
-                      color: 'white',
-                      border: 'none',
-                      padding: '8px 25px', 
-                      borderRadius: '12px',
-                      fontWeight: '700',
-                      fontSize: '12px',
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 10px rgba(226, 176, 83, 0.3)',
-                      width: 'fit-content',
-                      minWidth: '220px' 
-                    }}>
+                    className="btn-pickup"
+                    onClick={() => navigate(`/pengambilan/${item.id}`)}
+                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ opacity: 0.9 }}
+                  >
                     Pengambilan Barang
                   </motion.button>
                 </div>
@@ -182,39 +150,20 @@ const RiwayatClaimPage = () => {
 
             {/* Badge Status */}
             <motion.div 
+              className="status-badge"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.3 }}
-              style={{
-                position: 'absolute',
-                top: '18px',
-                right: '18px',
-                backgroundColor: item.statusColor,
-                color: 'white',
-                padding: '6px 16px',
-                borderRadius: '20px',
-                fontSize: '11px',
-                fontWeight: '700',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
+              style={{ backgroundColor: item.statusColor }}
             >
               {item.icon}
               {item.status}
             </motion.div>
-
           </motion.div>
         ))}
       </motion.div>
     </motion.div>
   );
-};
-
-const detailRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px'
 };
 
 export default RiwayatClaimPage;

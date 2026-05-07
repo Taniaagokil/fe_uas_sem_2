@@ -11,7 +11,10 @@ import TemuanDetailPage from './pages/TemuanDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import RiwayatClaimPage from './pages/RiwayatClaimPage'
 import KlaimBarangPage from './pages/KlaimBarangPage';
-import ScrollToTop from './components/ScrollToTop' // Import ini
+import HilangDetailPage from './pages/HilangDetailPage';
+import PengembalianPage from './pages/PengembalianPage';
+import PengambilanPage from './pages/PengambilanPage';
+import ScrollToTop from './components/ScrollToTop'
 import { itemsData } from './data/dummyData'
 
 function App() {
@@ -54,7 +57,6 @@ function App() {
           <Route path="/barang-hilang" element={<LostItemsPage items={items} />} />
           <Route path="/barang-ditemukan" element={<FoundItemsPage items={items} />} />
           <Route path="/lapor" element={<ReportPage onAddItem={handleAddItem} />} />
-          {/* FIX: Hanya gunakan satu Route untuk detail barang */}
           <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
           <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
 
@@ -63,7 +65,9 @@ function App() {
           <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
           <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
           <Route path="/klaim/:id" element={<KlaimBarangPage items={items} />} />
-
+          <Route path="/barang-hilang/:id" element={<HilangDetailPage items={items} />} />
+          <Route path="/pengembalian/:id" element={<PengembalianPage items={items} />} />
+          <Route path="/pengambilan/:id" element={<PengambilanPage items={items} />} />
         </Routes>
       </div>
       

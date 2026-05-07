@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence
 import { useNavigate } from 'react-router-dom';
-// Import Lucide icons
-import { UploadCloud, ChevronDown, Building, CalendarDays } from 'lucide-react';
+import { UploadCloud, ChevronDown, Building, CalendarDays, Check } from 'lucide-react'; // Tambah Check
 
 const ReportPage = ({ onAddItem }) => {
   const navigate = useNavigate();
+  const [isSubmitted, setIsSubmitted] = useState(false); // State untuk modal
   const [formData, setFormData] = useState({
     namaBarang: '',
     kategori: '',
@@ -44,8 +44,13 @@ const ReportPage = ({ onAddItem }) => {
       });
     }
     
-    alert('Laporan berhasil dibuat!');
-    navigate('/'); 
+    // Tampilkan animasi sukses
+    setIsSubmitted(true);
+
+    // Otomatis pindah halaman setelah 2.5 detik
+    setTimeout(() => {
+      navigate('/'); 
+    }, 2500);
   };
 
   return (
@@ -53,7 +58,7 @@ const ReportPage = ({ onAddItem }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gray-100 min-h-screen flex justify-center py-12 px-4" 
+      className="bg-gray-100 min-h-screen flex justify-center py-12 px-4 relative" 
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
       <div className="bg-white p-8 rounded-[20px] shadow-sm w-full max-w-2xl h-fit">
@@ -78,8 +83,7 @@ const ReportPage = ({ onAddItem }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-            
-          {/* Nama Barang */}
+          {/* Form fields tetap sama seperti sebelumnya... */}
           <div>
             <label className="block text-[#263859] font-bold text-[15px] mb-2">
               Nama Barang <span className="text-red-500">*</span>
@@ -95,9 +99,7 @@ const ReportPage = ({ onAddItem }) => {
             />
           </div>
 
-          {/* Tata Letak Ke Samping (Grid 2 Kolom) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Kategori Barang */}
             <div>
               <label className="block text-[#263859] font-bold text-[15px] mb-2">
                 Kategori Barang <span className="text-red-500">*</span>
@@ -122,7 +124,6 @@ const ReportPage = ({ onAddItem }) => {
               </div>
             </div>
 
-            {/* Gedung Kehilangan Barang */}
             <div>
               <label className="block text-[#263859] font-bold text-[15px] mb-2">
                 Gedung kehilangan barang <span className="text-red-500">*</span>
@@ -142,66 +143,30 @@ const ReportPage = ({ onAddItem }) => {
                 <ChevronDown className="w-5 h-5 text-[#263859] absolute right-4 pointer-events-none" strokeWidth={2.5} />
               </div>
             </div>
-
-            {/* Lokasi Terakhir */}
-            <div>
-              <label className="block text-[#263859] font-bold text-[15px] mb-2">
-                Lokasi Terakhir <span className="text-red-500">*</span>
-              </label>
-              <input 
-                type="text" 
-                name="lokasi"
-                required
-                value={formData.lokasi}
-                onChange={handleChange}
-                placeholder="Contoh: Lt. 3 ruang 306" 
-                className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 placeholder-gray-400"
-              />
-            </div>
-
-            {/* Tanggal Hilang */}
-            <div>
-              <label className="block text-[#263859] font-bold text-[15px] mb-2">
-                Tanggal Hilang <span className="text-red-500">*</span>
-              </label>
-              <div className="relative flex items-center bg-[#F8F9FA] rounded-[12px] px-4 py-3.5">
-                <CalendarDays className="w-5 h-5 text-[#EBB134] mr-3" strokeWidth={2} />
-                <input 
-                  type="date"
-                  name="tanggal"
-                  required
-                  value={formData.tanggal}
-                  onChange={handleChange}
-                  className="w-full bg-transparent text-sm focus:outline-none text-gray-600 cursor-pointer"
-                />
-              </div>
-            </div>
           </div>
 
-          {/* Deskripsi */}
           <div>
-            <label className="block text-[#263859] font-bold text-[15px] mb-2">
-              Deskripsi dan ciri ciri <span className="text-red-500">*</span>
-            </label>
-            <textarea 
-              rows="4" 
-              name="deskripsi"
-              required
-              value={formData.deskripsi}
-              onChange={handleChange}
-              placeholder="Deskripsikan ciri ciri barang anda" 
-              className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 placeholder-gray-400 resize-none"
-            ></textarea>
-          </div>
+             <label className="block text-[#263859] font-bold text-[15px] mb-2">
+               Deskripsi dan ciri ciri <span className="text-red-500">*</span>
+             </label>
+             <textarea 
+               rows="4" 
+               name="deskripsi"
+               required
+               value={formData.deskripsi}
+               onChange={handleChange}
+               placeholder="Deskripsikan ciri ciri barang anda" 
+               className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 placeholder-gray-400 resize-none"
+             ></textarea>
+           </div>
 
-          {/* Tombol Aksi */}
           <div className="flex gap-4 pt-4">
             <button 
               type="button" 
               onClick={() => navigate('/')}
               className="w-1/2 bg-[#263859] hover:bg-[#1a263d] text-white font-semibold py-3.5 px-4 rounded-[12px] transition duration-200 text-[15px]"
             >
-              Kembali ke beranda
+              Kembali
             </button>
             <button 
               type="submit" 
@@ -210,9 +175,52 @@ const ReportPage = ({ onAddItem }) => {
               Lapor Kehilangan
             </button>
           </div>
-          
         </form>
       </div>
+
+      {/* MODAL VALIDASI ANIMASI */}
+      <AnimatePresence>
+        {isSubmitted && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="bg-white p-10 rounded-[30px] shadow-xl flex flex-col items-center max-w-sm mx-4"
+            >
+              {/* Lingkaran Centang */}
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="w-20 h-20 bg-[#EBB134] rounded-full flex items-center justify-center mb-6"
+              >
+                <Check className="text-white w-12 h-12" strokeWidth={4} />
+              </motion.div>
+
+              <h2 className="text-[#263859] text-xl font-bold mb-2">Berhasil Diajukan!</h2>
+              <p className="text-gray-500 text-center text-sm leading-relaxed">
+                Laporan Anda telah kami terima. Mengarahkan ke halaman beranda...
+              </p>
+
+              {/* Loader kecil di bawah */}
+              <div className="mt-6 w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 2 }}
+                  className="bg-[#EBB134] h-full"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

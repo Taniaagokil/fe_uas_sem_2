@@ -33,57 +33,61 @@ function TemuanDetailPage({ items }) {
           Barang Temuan <span className="text-yellow">Found</span>
         </h2>
 
-        <div className="temuan-grid-layout">
+        {/* Layout Grid dengan class tambahan align-stretch */}
+        <div className="temuan-grid-layout align-stretch">
+          
           {/* Sisi Kiri: Foto Barang */}
-          <div className="temuan-image-wrapper animate-slide-up">
+          <div className="temuan-image-wrapper animate-slide-up full-height-wrapper">
             <img 
               src={item.foto || item.image || `https://via.placeholder.com/600x450?text=${item.nama}`} 
               alt={item.nama} 
-              className="temuan-img-fluid"
+              className="temuan-img-fluid image-auto-height"
             />
           </div>
 
           {/* Sisi Kanan: Konten Informasi */}
-          <div className="temuan-info-wrapper animate-slide-up-delayed">
-            <div className="temuan-badge-category">
-              {item.kategori || 'Elektronik'}
-            </div>
-            
-            <h1 className="temuan-item-name">{item.nama}</h1>
-
-            <div className="temuan-meta-data">
-              <div className="meta-item">
-                <HiOutlineOfficeBuilding className="meta-icon-styled" style={{ color: themeColor }} />
-                <span>{item.lokasi || 'Vokasi Veteran - Gedung BNI'}</span>
+          <div className="temuan-info-wrapper animate-slide-up-delayed flex-column-between">
+            <div className="info-top-section">
+              <div className="temuan-badge-category">
+                {item.kategori || 'Elektronik'}
               </div>
-              <div className="meta-item">
-                <IoLocationSharp className="meta-icon-styled" style={{ color: themeColor }} />
-                <span>{item.lokasiDetail || 'Meja Vokantin'}</span>
+              
+              <h1 className="temuan-item-name">{item.nama}</h1>
+
+              <div className="temuan-meta-data">
+                <div className="meta-item">
+                  <HiOutlineOfficeBuilding className="meta-icon-styled" style={{ color: themeColor }} />
+                  <span>{item.lokasi || 'Vokasi Veteran - Gedung BNI'}</span>
+                </div>
+                <div className="meta-item">
+                  <IoLocationSharp className="meta-icon-styled" style={{ color: themeColor }} />
+                  <span>{item.lokasiDetail || 'Meja Vokantin'}</span>
+                </div>
+                <div className="meta-item">
+                  <IoCalendarClear className="meta-icon-styled" style={{ color: themeColor }} />
+                  <span>{item.tanggal || '1 Desember 2025 14:40'}</span>
+                </div>
               </div>
-              <div className="meta-item">
-                <IoCalendarClear className="meta-icon-styled" style={{ color: themeColor }} />
-                <span>{item.tanggal || '1 Desember 2025 14:40'}</span>
+
+              <div className="temuan-description-box">
+                <h3>Deskripsi dan ciri ciri</h3>
+                <p>
+                  {item.deskripsi || `Sebuah ${item.nama} ditemukan di area tersebut. Bagi yang merasa memiliki, silakan klik tombol ajukan klaim di bawah untuk proses verifikasi lebih lanjut.`}
+                </p>
               </div>
             </div>
 
-            <div className="temuan-description-box">
-              <h3>Deskripsi dan ciri ciri</h3>
-              <p>
-                {item.deskripsi || `Sebuah ${item.nama} ditemukan di area tersebut. Bagi yang merasa memiliki, silakan klik tombol ajukan klaim di bawah untuk proses verifikasi lebih lanjut.`}
-              </p>
-            </div>
-
-            {/* Tombol Navigasi & Aksi */}
+            {/* Tombol Navigasi & Aksi (Akan sejajar di bawah foto) */}
             <div className="temuan-btn-group">
               <button className="btn-navy-back" onClick={() => navigate('/')}>
                 Kembali ke beranda
               </button>
               <button 
-  className="btn-yellow-claim" 
-  onClick={() => navigate(`/klaim/${item.id}`)}
->
-  Ajukan Klaim
-</button>
+                className="btn-yellow-claim" 
+                onClick={() => navigate(`/klaim/${item.id}`)}
+              >
+                Ajukan Klaim
+              </button>
             </div>
           </div>
         </div>

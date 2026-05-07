@@ -3,16 +3,16 @@
 
 .temuan-detail-container {
   font-family: 'Montserrat', sans-serif;
-  padding: 40px 10% 40px 10%; /* Diperkecil agar lebih naik */
+  padding: 40px 10% 40px 10%;
   display: flex;
   justify-content: center;
   background-color: #fff;
   min-height: calc(100vh - 70px);
-  overflow-y: hidden; /* Mencegah scroll berlebih jika konten pas */
+  overflow-y: hidden;
 }
 
 .temuan-detail-card {
-  max-width: 1000px; /* Ukuran card maksimal diperkecil */
+  max-width: 1000px;
   width: 100%;
 }
 
@@ -28,23 +28,37 @@
   color: #E2B053;
 }
 
+/* MODIFIKASI: Menggunakan Flex agar align-items stretch bekerja */
 .temuan-grid-layout {
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr; /* Gambar dibuat sedikit lebih kecil dari info */
+  display: flex;
   gap: 40px; 
-  align-items: start;
 }
 
-.temuan-image-wrapper .temuan-img-fluid {
-  width: 100%;
-  max-height: 400px; /* Batasi tinggi gambar agar tidak memakan layar */
-  object-fit: cover;
+.temuan-grid-layout.align-stretch {
+  align-items: stretch;
+}
+
+/* SISI KIRI: Foto */
+.temuan-image-wrapper {
+  flex: 0 0 42%; /* Lebar kolom foto */
   border-radius: 24px;
+  overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-.temuan-info-wrapper {
-  padding-top: 0; 
+.temuan-img-fluid.image-auto-height {
+  width: 100%;
+  height: 100% !important; /* Memaksa foto mengikuti tinggi kolom kanan */
+  object-fit: cover; /* Agar foto tidak gepeng */
+  display: block;
+}
+
+/* SISI KANAN: Informasi */
+.temuan-info-wrapper.flex-column-between {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Mendorong tombol ke paling bawah */
 }
 
 .temuan-badge-category {
@@ -103,7 +117,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 25px;
+  margin-top: 25px; /* Jarak minimal dari deskripsi */
 }
 
 .btn-navy-back, .btn-yellow-claim {
@@ -133,7 +147,7 @@
   transform: translateY(-2px);
 }
 
-/* Animasi tetap dipertahankan */
+/* Animasi */
 .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
 .animate-slide-up { animation: slideUp 0.8s ease-out forwards; }
 .animate-slide-up-delayed { 
@@ -147,8 +161,9 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Responsive */
 @media (max-width: 900px) {
-  .temuan-grid-layout { grid-template-columns: 1fr; gap: 20px; }
+  .temuan-grid-layout { flex-direction: column; gap: 20px; }
   .temuan-detail-container { padding: 20px 5%; overflow-y: auto; }
-  .temuan-image-wrapper .temuan-img-fluid { max-height: 300px; }
+  .temuan-image-wrapper { height: 300px; flex: none; }
 }

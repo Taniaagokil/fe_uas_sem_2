@@ -92,9 +92,7 @@ function App() {
           </Routes>
         </div>
         
-        {/* Footer HANYA muncul jika BUKAN halaman staff */}
-        {!isStaffPage && <Footer />}
-        {isStaffPage && <Footerstaff />}
+        
       </div>
     </div>
   )

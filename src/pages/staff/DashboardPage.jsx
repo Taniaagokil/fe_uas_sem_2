@@ -7,9 +7,7 @@ import './DashboardPage.css';
 const DashboardPage = () => {
   return (
     <div className="dashboard-container">
-      {/* Kiri: Sidebar - Tambahkan prop activePage */}
-      <Sidebar activePage="dashboard" />
-
+      
       {/* Kanan: Konten Utama */}
       <div className="main-content">
         <h1 className="greeting">Halo, Selamat datang Staff Vokasi UB !</h1>

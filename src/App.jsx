@@ -21,7 +21,9 @@ import { itemsData } from './data/dummyData'
 import DashboardPage from './pages/staff/DashboardPage';
 import Sidebar from './components/staff/Sidebar';
 import BarangTemuanPage from './pages/staff/BarangTemuanPage';
-import BarangHilangPage from './pages/staff/BarangHilangPage'; // Import Halaman Baru
+import BarangHilangPage from './pages/staff/BarangHilangPage'; 
+import BarangKategoriPage from './pages/staff/kategori/BarangPage';
+import GedungPage from './pages/staff/kategori/GedungPage'; // <--- IMPORT GEDUNG PAGE
 
 function App() {
   const [user, setUser] = useState(null)
@@ -88,11 +90,16 @@ function App() {
             <Route path="/staff/dashboard" element={<DashboardPage />} />
             <Route path="/staff/barang-temuan" element={<BarangTemuanPage />} />
             <Route path="/staff/barang-hilang" element={<BarangHilangPage />} /> 
-            {/* Tambahkan route lain di sini seperti kelola-kategori atau laporan-klaim */}
+            
+            {/* Route Kelola Kategori */}
+            <Route path="/staff/kategori/barang" element={<BarangKategoriPage />} />
+            <Route path="/staff/kategori/gedung" element={<GedungPage />} /> {/* <--- TAMBAHKAN INI */}
+            
+            {/* Tambahkan route lain di sini seperti laporan-klaim */}
           </Routes>
         </div>
 
-        {/* Footer User biasa (Staff sudah punya footer sendiri di dalam pagenya) */}
+        {/* Footer User biasa */}
         {!isStaffPage && <Footer />}
       </div>
     </div>

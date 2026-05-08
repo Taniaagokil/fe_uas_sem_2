@@ -24,6 +24,7 @@ import BarangTemuanPage from './pages/staff/BarangTemuanPage';
 import BarangHilangPage from './pages/staff/BarangHilangPage'; 
 import BarangKategoriPage from './pages/staff/kategori/BarangPage';
 import GedungPage from './pages/staff/kategori/GedungPage'; // <--- IMPORT GEDUNG PAGE
+import LaporanKlaimBarangPage from './pages/staff/LaporanKlaimBarangPage';
 
 function App() {
   const [user, setUser] = useState(null)
@@ -88,6 +89,7 @@ function App() {
 
             {/* --- ROUTE STAFF --- */}
             <Route path="/staff/dashboard" element={<DashboardPage />} />
+            
             <Route path="/staff/barang-temuan" element={<BarangTemuanPage />} />
             <Route path="/staff/barang-hilang" element={<BarangHilangPage />} /> 
             
@@ -96,6 +98,7 @@ function App() {
             <Route path="/staff/kategori/gedung" element={<GedungPage />} /> {/* <--- TAMBAHKAN INI */}
             
             {/* Tambahkan route lain di sini seperti laporan-klaim */}
+            <Route path="/staff/laporan-klaim" element={<LaporanKlaimBarangPage />} />
           </Routes>
         </div>
 

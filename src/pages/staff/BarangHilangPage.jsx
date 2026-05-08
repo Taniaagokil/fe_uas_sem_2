@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import ReusableTable from '../../components/staff/table';
 import Footerstaff from '../../components/staff/Footerstaff';
 
-const BarangTemuanPage = () => {
+const BarangHilangPage = () => {
   const columns = [
     { header: 'Kode', key: 'kode', width: '10%' },
     { header: 'Kategori', key: 'kategori', width: '20%' },
@@ -13,13 +13,19 @@ const BarangTemuanPage = () => {
       header: 'Status', 
       key: 'status', 
       width: '15%',
-      render: (row) => (
-        <span className={`inline-block w-28 py-1.5 rounded-full text-white text-[11px] font-bold shadow-sm text-center ${
-          row.status === 'Diunggah' ? 'bg-[#82B1E1]' : 'bg-[#CC7171]'
-        }`}>
-          {row.status}
-        </span>
-      )
+      render: (row) => {
+        // Logika warna berdasarkan status di gambar
+        let bgColor = 'bg-[#CC7171]'; // Default merah (Belum Ditemukan)
+        if (row.status === 'Di Unggah Temuan') {
+          bgColor = 'bg-[#82B1E1]'; // Biru muda
+        }
+
+        return (
+          <span className={`inline-block px-4 py-1.5 rounded-full text-white text-[11px] font-bold shadow-sm whitespace-nowrap ${bgColor}`}>
+            {row.status}
+          </span>
+        );
+      }
     },
     { 
       header: 'Aksi', 
@@ -41,8 +47,20 @@ const BarangTemuanPage = () => {
   ];
 
   const data = [
-    { kode: '001', kategori: 'Elektronik', nama_barang: 'Kipas Angin', tanggal: '15 Januari 2026', status: 'Diunggah' },
-    { kode: '005', kategori: 'Elektronik', nama_barang: 'Kipas Angin', tanggal: '15 Januari 2026', status: 'Arsip' },
+    { 
+      kode: '001', 
+      kategori: 'Elektronik', 
+      nama_barang: 'Kipas Angin', 
+      tanggal: '15 Januari 2026', 
+      status: 'Belum Ditemukan' 
+    },
+    { 
+      kode: '005', 
+      kategori: 'Elektronik', 
+      nama_barang: 'Kipas Angin', 
+      tanggal: '15 Januari 2026', 
+      status: 'Di Unggah Temuan' 
+    },
   ];
 
   return (
@@ -57,7 +75,7 @@ const BarangTemuanPage = () => {
           animate={{ x: 0, opacity: 1 }}
           className="text-[32px] font-bold text-[#2D3E50] mb-10"
         >
-          Laporan Barang <span className="text-[#E9B82F]">Temuan</span>
+          Laporan Barang <span className="text-[#E9B82F]">Hilang</span>
         </motion.h1>
 
         <div className="flex justify-between items-center mb-8 gap-4">
@@ -83,11 +101,10 @@ const BarangTemuanPage = () => {
             whileTap={{ scale: 0.95 }}
             className="bg-[#2D3E50] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-md"
           >
-            <span className="text-xl">+</span> Unggah Barang Temuan
+            <span className="text-xl">+</span> Unggah Barang Hilang
           </motion.button>
         </div>
 
-        {/* Container Tabel dengan animasi Pop-up */}
         <motion.div 
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -97,7 +114,6 @@ const BarangTemuanPage = () => {
           <ReusableTable columns={columns} data={data} />
         </motion.div>
 
-        {/* FAB Chat dengan animasi Floating */}
         <motion.button 
           animate={{ y: [0, -10, 0] }}
           transition={{ repeat: Infinity, duration: 3 }}
@@ -115,4 +131,4 @@ const BarangTemuanPage = () => {
   );
 };
 
-export default BarangTemuanPage;
+export default BarangHilangPage;

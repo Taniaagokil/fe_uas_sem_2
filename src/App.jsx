@@ -19,9 +19,9 @@ import { itemsData } from './data/dummyData'
 
 // --- IMPORT HALAMAN STAFF ---
 import DashboardPage from './pages/staff/DashboardPage';
-import Footerstaff from './components/staff/Footerstaff';
-import BarangTemuanPage from './pages/staff/BarangTemuanPage.jsx'; // Import Page Baru
-import Sidebar from './components/staff/Sidebar'; // Asumsi lo punya sidebar component
+import Sidebar from './components/staff/Sidebar';
+import BarangTemuanPage from './pages/staff/BarangTemuanPage';
+import BarangHilangPage from './pages/staff/BarangHilangPage'; // Import Halaman Baru
 
 function App() {
   const [user, setUser] = useState(null)
@@ -47,13 +47,13 @@ function App() {
   }
 
   return (
-    <div className={isStaffPage ? "flex bg-gray-100 min-h-screen" : ""}>
+    <div className={isStaffPage ? "flex bg-white min-h-screen" : ""}>
       <ScrollToTop />
       
       {/* Sidebar khusus Staff */}
       {isStaffPage && <Sidebar />}
 
-      <div className={isStaffPage ? "flex-1 flex flex-col" : "w-full"}>
+      <div className={isStaffPage ? "flex-1 flex flex-col overflow-hidden" : "w-full"}>
         {/* Navbar HANYA muncul jika BUKAN halaman staff */}
         {!isStaffPage && (
           <Navbar 
@@ -87,12 +87,13 @@ function App() {
             {/* --- ROUTE STAFF --- */}
             <Route path="/staff/dashboard" element={<DashboardPage />} />
             <Route path="/staff/barang-temuan" element={<BarangTemuanPage />} />
-            <Route path="/staff/footerstaff" element={<Footerstaff />} />
-            <Route path="/staff/barang-temuan" element={<BarangTemuanPage />} />
+            <Route path="/staff/barang-hilang" element={<BarangHilangPage />} /> 
+            {/* Tambahkan route lain di sini seperti kelola-kategori atau laporan-klaim */}
           </Routes>
         </div>
-        
-        
+
+        {/* Footer User biasa (Staff sudah punya footer sendiri di dalam pagenya) */}
+        {!isStaffPage && <Footer />}
       </div>
     </div>
   )

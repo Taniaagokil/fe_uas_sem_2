@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom' // Tambahkan useLocation
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import LoginModal from './components/LoginModal'
@@ -17,16 +17,18 @@ import PengambilanPage from './pages/PengambilanPage';
 import ScrollToTop from './components/ScrollToTop'
 import { itemsData } from './data/dummyData'
 
-// --- IMPORT HALAMAN STAFF BARU ---
+// --- IMPORT HALAMAN STAFF ---
 import DashboardPage from './pages/staff/DashboardPage';
 import Footerstaff from './components/staff/Footerstaff';
+import BarangTemuanPage from './pages/staff/BarangTemuanPage.jsx'; // Import Page Baru
+import Sidebar from './components/staff/Sidebar'; // Asumsi lo punya sidebar component
 
 function App() {
   const [user, setUser] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [items, setItems] = useState(itemsData)
   
-  const location = useLocation(); // Mendeteksi URL saat ini
+  const location = useLocation();
 
   // Cek apakah halaman saat ini adalah halaman staff
   const isStaffPage = location.pathname.startsWith('/staff');
@@ -45,47 +47,55 @@ function App() {
   }
 
   return (
-    <div>
+    <div className={isStaffPage ? "flex bg-gray-100 min-h-screen" : ""}>
       <ScrollToTop />
       
-      {/* Navbar HANYA muncul jika BUKAN halaman staff */}
-      {!isStaffPage && (
-        <Navbar 
-          user={user} 
-          onOpenLogin={() => setIsModalOpen(true)} 
-        />
-      )}
-      
-      <LoginModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onLogin={handleLogin} 
-      />
-      
-      {/* Padding top 70px HANYA untuk halaman user biasa agar tidak tertutup Navbar */}
-      <div style={{ paddingTop: isStaffPage ? '0px' : '70px', minHeight: '80vh' }}>
-        <Routes>
-          {/* --- ROUTE USER BIASA --- */}
-          <Route path="/" element={<HomePage items={items} />} />
-          <Route path="/barang-hilang" element={<LostItemsPage items={items} />} />
-          <Route path="/barang-ditemukan" element={<FoundItemsPage items={items} />} />
-          <Route path="/lapor" element={<ReportPage onAddItem={handleAddItem} />} />
-          <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
-          <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
-          <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
-          <Route path="/klaim/:id" element={<KlaimBarangPage items={items} />} />
-          <Route path="/barang-hilang/:id" element={<HilangDetailPage items={items} />} />
-          <Route path="/pengembalian/:id" element={<PengembalianPage items={items} />} />
-          <Route path="/pengambilan/:id" element={<PengambilanPage items={items} />} />
+      {/* Sidebar khusus Staff */}
+      {isStaffPage && <Sidebar />}
 
-          {/* --- ROUTE STAFF (BARU) --- */}
-          <Route path="/staff/dashboard" element={<DashboardPage />} />
-          <Route path="/staff/footerstaff" element={<Footerstaff />} />
-        </Routes>
+      <div className={isStaffPage ? "flex-1 flex flex-col" : "w-full"}>
+        {/* Navbar HANYA muncul jika BUKAN halaman staff */}
+        {!isStaffPage && (
+          <Navbar 
+            user={user} 
+            onOpenLogin={() => setIsModalOpen(true)} 
+          />
+        )}
+        
+        <LoginModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          onLogin={handleLogin} 
+        />
+        
+        {/* Main Content Area */}
+        <div style={{ paddingTop: isStaffPage ? '0px' : '70px', minHeight: '80vh' }}>
+          <Routes>
+            {/* --- ROUTE USER BIASA --- */}
+            <Route path="/" element={<HomePage items={items} />} />
+            <Route path="/barang-hilang" element={<LostItemsPage items={items} />} />
+            <Route path="/barang-ditemukan" element={<FoundItemsPage items={items} />} />
+            <Route path="/lapor" element={<ReportPage onAddItem={handleAddItem} />} />
+            <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
+            <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+            <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
+            <Route path="/klaim/:id" element={<KlaimBarangPage items={items} />} />
+            <Route path="/barang-hilang/:id" element={<HilangDetailPage items={items} />} />
+            <Route path="/pengembalian/:id" element={<PengembalianPage items={items} />} />
+            <Route path="/pengambilan/:id" element={<PengambilanPage items={items} />} />
+
+            {/* --- ROUTE STAFF --- */}
+            <Route path="/staff/dashboard" element={<DashboardPage />} />
+            <Route path="/staff/barang-temuan" element={<BarangTemuanPage />} />
+            <Route path="/staff/footerstaff" element={<Footerstaff />} />
+            <Route path="/staff/barang-temuan" element={<BarangTemuanPage />} />
+          </Routes>
+        </div>
+        
+        {/* Footer HANYA muncul jika BUKAN halaman staff */}
+        {!isStaffPage && <Footer />}
+        {isStaffPage && <Footerstaff />}
       </div>
-      
-      {/* Footer HANYA muncul jika BUKAN halaman staff */}
-      {!isStaffPage && <Footer />}
     </div>
   )
 }

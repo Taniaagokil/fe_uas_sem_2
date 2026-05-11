@@ -23,8 +23,9 @@ import Sidebar from './components/staff/Sidebar';
 import BarangTemuanPage from './pages/staff/BarangTemuanPage';
 import BarangHilangPage from './pages/staff/BarangHilangPage'; 
 import BarangKategoriPage from './pages/staff/kategori/BarangPage';
-import GedungPage from './pages/staff/kategori/GedungPage'; // <--- IMPORT GEDUNG PAGE
+import GedungPage from './pages/staff/kategori/GedungPage';
 import LaporanKlaimBarangPage from './pages/staff/LaporanKlaimBarangPage';
+import LoginStaffPage from './pages/staff/LoginStaffPage'; // <--- IMPORT LOGIN STAFF
 
 function App() {
   const [user, setUser] = useState(null)
@@ -33,7 +34,8 @@ function App() {
   
   const location = useLocation();
 
-  // Cek apakah halaman saat ini adalah halaman staff
+  // Cek apakah halaman saat ini adalah halaman dashboard staff (bukan login staff)
+  const isStaffDashboard = location.pathname.startsWith('/staff') && location.pathname !== '/staff';
   const isStaffPage = location.pathname.startsWith('/staff');
 
   const handleLogin = (userData) => {
@@ -50,13 +52,13 @@ function App() {
   }
 
   return (
-    <div className={isStaffPage ? "flex bg-white min-h-screen" : ""}>
+    <div className={isStaffDashboard ? "flex bg-white min-h-screen" : ""}>
       <ScrollToTop />
       
-      {/* Sidebar khusus Staff */}
-      {isStaffPage && <Sidebar />}
+      {/* Sidebar HANYA muncul jika di dashboard staff (BUKAN di login staff) */}
+      {isStaffDashboard && <Sidebar />}
 
-      <div className={isStaffPage ? "flex-1 flex flex-col overflow-hidden" : "w-full"}>
+      <div className={isStaffDashboard ? "flex-1 flex flex-col overflow-hidden" : "w-full"}>
         {/* Navbar HANYA muncul jika BUKAN halaman staff */}
         {!isStaffPage && (
           <Navbar 
@@ -72,7 +74,7 @@ function App() {
         />
         
         {/* Main Content Area */}
-        <div style={{ paddingTop: isStaffPage ? '0px' : '70px', minHeight: '80vh' }}>
+        <div style={{ paddingTop: isStaffDashboard ? '0px' : (isStaffPage ? '0px' : '70px'), minHeight: '80vh' }}>
           <Routes>
             {/* --- ROUTE USER BIASA --- */}
             <Route path="/" element={<HomePage items={items} />} />
@@ -88,17 +90,14 @@ function App() {
             <Route path="/pengambilan/:id" element={<PengambilanPage items={items} />} />
 
             {/* --- ROUTE STAFF --- */}
+            <Route path="/staff" element={<LoginStaffPage />} /> {/* <--- ROUTE LOGIN STAFF */}
             <Route path="/staff/dashboard" element={<DashboardPage />} />
-            
             <Route path="/staff/barang-temuan" element={<BarangTemuanPage />} />
             <Route path="/staff/barang-hilang" element={<BarangHilangPage />} /> 
-            
-            {/* Route Kelola Kategori */}
             <Route path="/staff/kategori/barang" element={<BarangKategoriPage />} />
-            <Route path="/staff/kategori/gedung" element={<GedungPage />} /> {/* <--- TAMBAHKAN INI */}
-            
-            {/* Tambahkan route lain di sini seperti laporan-klaim */}
+            <Route path="/staff/kategori/gedung" element={<GedungPage />} /> 
             <Route path="/staff/laporan-klaim" element={<LaporanKlaimBarangPage />} />
+            <Route path="/staff/login-staff" element={<LoginStaffPage />} />
           </Routes>
         </div>
 

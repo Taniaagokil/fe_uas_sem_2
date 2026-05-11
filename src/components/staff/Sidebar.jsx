@@ -1,17 +1,26 @@
-import React, { useState } from 'react'; // Import useState untuk dropdown
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react'; // Ambil icon logout saja
 import './Sidebar.css';
-import LogoVokasi from '../../img/vokasi.jpg'; // Pastikan path benar
+import LogoVokasi from '../../img/vokasi.jpg';
 
-// TAMBAHKAN { activePage } di dalam kurung parameter Sidebar
 const Sidebar = ({ activePage }) => {
   const location = useLocation();
-  // State untuk mengontrol apakah dropdown kategori terbuka atau tertutup
+  const navigate = useNavigate();
+  
   const [isKategoriOpen, setIsKategoriOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  // Fungsi untuk toggle dropdown
   const toggleDropdown = () => {
     setIsKategoriOpen(!isKategoriOpen);
+  };
+
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
+  const handleLogout = () => {
+    navigate('/staff');
   };
 
   return (
@@ -21,7 +30,6 @@ const Sidebar = ({ activePage }) => {
       </div>
       
       <div className="sidebar-menu">
-        {/* MODIFIKASI KODE: Cek location.pathname ATAU activePage prop */}
         <Link 
           to="/staff/dashboard" 
           className={`menu-item ${location.pathname === '/staff/dashboard' || activePage === 'dashboard' ? 'active' : ''}`}
@@ -30,8 +38,8 @@ const Sidebar = ({ activePage }) => {
         </Link>
         <Link 
           to="/staff/barang-temuan" 
-           className={`menu-item ${location.pathname === '/staff/barang-temuan' || activePage === 'barang-temuan' ? 'active' : ''}`}
-           >
+          className={`menu-item ${location.pathname === '/staff/barang-temuan' || activePage === 'barang-temuan' ? 'active' : ''}`}
+        >
           Barang Temuan
         </Link>
         <Link 
@@ -41,7 +49,6 @@ const Sidebar = ({ activePage }) => {
           Barang Hilang
         </Link>
         
-        {/* Menu Dropdown Kelola Kategori */}
         <div 
           className={`menu-item dropdown-toggle ${isKategoriOpen ? 'active' : ''}`} 
           onClick={toggleDropdown}
@@ -51,7 +58,6 @@ const Sidebar = ({ activePage }) => {
           <span className="arrow">{isKategoriOpen ? '▴' : '▾'}</span>
         </div>
 
-        {/* Isi Dropdown (Hanya muncul jika isKategoriOpen bernilai true) */}
         {isKategoriOpen && (
           <div className="submenu">
             <Link 
@@ -78,12 +84,25 @@ const Sidebar = ({ activePage }) => {
       </div>
 
       <div className="sidebar-footer">
-        <div className="user-profile">
-          <span className="user-icon">👤</span>
-          <span className="user-name">Staff Vok Veteran</span>
-        </div>
-      </div>
+  {/* POPUP LOGOUT (Hanya Teks & Icon) */}
+  {isProfileOpen && (
+    <div className="logout-popup-clean">
+      <button onClick={handleLogout} className="logout-button-clean">
+        <LogOut size={16} />
+        <span>Keluar Akun</span>
+      </button>
     </div>
+  )}
+
+  {/* KONTAINER PROFIL STAFF */}
+  <div className="user-profile" onClick={toggleProfile} style={{ cursor: 'pointer' }}>
+    <span className="user-icon">👤</span>
+    <span className="user-name">Staff Vok Veteran</span>
+  </div>
+</div>
+        </div>
+
+
   );
 };
 

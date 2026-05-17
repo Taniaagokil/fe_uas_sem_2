@@ -4,25 +4,22 @@ import { motion } from 'framer-motion';
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { IoLocationSharp, IoCalendarClear } from 'react-icons/io5';
 import { FaLock, FaUsers, FaIdCard } from 'react-icons/fa';
+import useFetch from '../hooks/useFetch';
 import './PengambilanPage.css';
 
 const PengambilanPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // Data sesuai dengan tampilan yang Anda minta
-    const itemData = {
-        nama: "Earbuds Baseus",
-        kategori: "Elektronik",
-        lokasi: "Vokasi Veteran - Gedung BNI",
-        ruang: "Ruang 309",
-        waktu: "1 Desember 2025 14:40",
-        image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500", 
-        kodeBukti: "002",
-        ruangStaff: "Lost And Found - Vokasi Veteran"
-    };
+    const { data: klaim, loading, error } = useFetch(`/klaim/${id}`);
 
     const yellowTheme = '#E2B053';
+
+    if (loading) return <div className="error-screen"><h2>Memuat...</h2></div>;
+    if (error || !klaim) return <div className="error-screen"><h2>Klaim tidak ditemukan</h2></div>;
+
+    const item = klaim.temuan?.barang;
+    const temuan = klaim.temuan;
 
     return (
         <motion.div 
@@ -43,24 +40,24 @@ const PengambilanPage = () => {
                 transition={{ delay: 0.2 }}
             >
                 <div className="item-image-wrapper">
-                    <img src={itemData.image} alt={itemData.nama} />
+                    <img src={item?.foto_barang ? `http://localhost:8000/storage/barang/${item.foto_barang}` : `https://via.placeholder.com/500x350?text=${item?.nama_barang}`} alt={item?.nama_barang} />
                 </div>
 
                 <div className="item-info">
-                    <div className="category-badge">{itemData.kategori}</div>
-                    <h3 className="item-name">{itemData.nama}</h3>
+                    <div className="category-badge">{item?.kategori?.nama_kategori}</div>
+                    <h3 className="item-name">{item?.nama_barang}</h3>
                     
                     <div className="info-row">
                         <HiOutlineOfficeBuilding style={{ color: yellowTheme, fontSize: '20px' }} />
-                        <span>{itemData.lokasi}</span>
+                        <span>{temuan?.gedung?.nama_gedung || 'Vokasi Veteran'}</span>
                     </div>
                     <div className="info-row">
                         <IoLocationSharp style={{ color: yellowTheme, fontSize: '20px' }} />
-                        <span>{itemData.ruang}</span>
+                        <span>{temuan?.lokasi_detail || 'Detail tidak tersedia'}</span>
                     </div>
                     <div className="info-row">
                         <IoCalendarClear style={{ color: yellowTheme, fontSize: '20px' }} />
-                        <span>{itemData.waktu}</span>
+                        <span>{temuan?.tanggal_ditemukan}</span>
                     </div>
                 </div>
             </motion.div>
@@ -74,7 +71,7 @@ const PengambilanPage = () => {
                     transition={{ delay: 0.4 }}
                 >
                     <FaLock style={{ color: yellowTheme }} />
-                    Kode Bukti <span>{itemData.kodeBukti}</span>
+                    Kode Bukti <span>{klaim.klaim_id.toString().padStart(3, '0')}</span>
                 </motion.div>
 
                 <motion.div 
@@ -84,7 +81,7 @@ const PengambilanPage = () => {
                     transition={{ delay: 0.5 }}
                 >
                     <FaUsers style={{ color: yellowTheme }} />
-                    Ruangan Staff <span>{itemData.ruangStaff}</span>
+                    Ruangan Staff <span>Lost And Found - Vokasi Veteran</span>
                 </motion.div>
 
                 <motion.div 
@@ -107,9 +104,9 @@ const PengambilanPage = () => {
             >
                 <button 
                     className="btn-back" 
-                    onClick={() => navigate('/riwayat-claim')}
+                    onClick={() => navigate('/')}
                 >
-                    Kembali ke Riwayat Klaim
+                    Kembali ke beranda
                 </button>
                 <button 
                     className="btn-print"

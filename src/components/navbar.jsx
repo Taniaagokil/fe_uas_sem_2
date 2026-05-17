@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 import './navbar.css';
 
-function Navbar({ user, onOpenLogin }) {
+function Navbar({ onOpenLogin }) {
+  const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
@@ -34,13 +36,20 @@ function Navbar({ user, onOpenLogin }) {
 
           <div className="navbar-auth">
             {user ? (
-              <Link to="/profile" className="btn-profile-nav" onClick={() => setIsOpen(false)}>
-                <div className="profile-info-wrapper">
-                  <span className="profile-label">Profile Saya</span>
-                  <span className="profile-user-name">{user.nama}</span>
-                </div>
-                <div className="profile-icon-nav">👤</div>
-              </Link>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                {user.role === 'staff' && (
+                  <Link to="/staff/dashboard" className="btn-login" style={{ background: '#2D3E5E', whiteSpace: 'nowrap' }}>
+                    Dashboard Staff
+                  </Link>
+                )}
+                <Link to="/profile" className="btn-profile-nav" onClick={() => setIsOpen(false)}>
+                  <div className="profile-info-wrapper">
+                    <span className="profile-label">Profile Saya</span>
+                    <span className="profile-user-name">{user.nama}</span>
+                  </div>
+                  <div className="profile-icon-nav">👤</div>
+                </Link>
+              </div>
             ) : (
               <button 
                 className="btn-login" 

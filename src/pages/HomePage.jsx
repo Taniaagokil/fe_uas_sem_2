@@ -5,6 +5,7 @@ import FilterBar from '../components/FilterBar';
 import CardTemuan from '../components/CardTemuan';
 import { IoSearch } from 'react-icons/io5';
 import { HiOutlineClipboardList } from 'react-icons/hi';
+import useFetch from '../hooks/useFetch';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
@@ -14,10 +15,13 @@ import 'swiper/css/pagination';
 import vokasiDieng from '../img/vokasi_dieng.jpg';
 import vokasiKp from '../img/vokasi_kp.jpg';
 
-function HomePage({ items }) {
+function HomePage() {
+  const { data: items, loading, error } = useFetch('/barang');
+  
   // Memisahkan item berdasarkan status
-  const lostItems = items.filter(item => item.status === 'lost').slice(0, 4);
-  const foundItems = items.filter(item => item.status === 'found').slice(0, 4);
+  // Note: Sesuaikan dengan status di database Laravel (enum)
+  const lostItems = Array.isArray(items) ? items.filter(item => item.status === 'belum_ditemukan').slice(0, 4) : [];
+  const foundItems = Array.isArray(items) ? items.filter(item => item.status === 'diunggah' || item.status === 'ditemukan').slice(0, 4) : [];
 
   // Warna utama konsisten #273A5A
   const mainColor = '#273A5A';
@@ -34,7 +38,7 @@ function HomePage({ items }) {
       </style>
 
       {/* 1. Hero Section */}
-      <div style={{ maxWidth: '1200px', margin: '-50px auto 20px auto', padding: '0 20px', position: 'relative', zIndex: 10 }}>
+      <div className="max-w-[1200px] mx-auto px-4 -mt-8 md:-mt-12 mb-6 relative z-10">
         <Swiper
           modules={[Pagination, Autoplay]}
           spaceBetween={0}
@@ -42,14 +46,17 @@ function HomePage({ items }) {
           pagination={{ clickable: true }}
           loop={true}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
-          style={{ borderRadius: '20px', height: '350px', overflow: 'hidden' }}
+          className="rounded-3xl h-[250px] md:h-[350px] overflow-hidden shadow-xl"
         >
           { [vokasiDieng, vokasiKp].map((img, index) => (
             <SwiperSlide key={index}>
-              <div style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '100%', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(39, 58, 90, 0.75)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', color: 'white', padding: '20px' }}>
-                  <h1 style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '10px' }}>Voks<span style={{ color: '#fbbf24' }}>Find</span></h1>
-                  <p style={{ fontSize: '16px', maxWidth: '650px', lineHeight: '1.5', opacity: '0.9' }}>Tempat mencari dan melaporkan barang hilang di Fakultas Vokasi UB.</p>
+              <div 
+                className="h-full bg-cover bg-center relative"
+                style={{ backgroundImage: `url(${img})` }}
+              >
+                <div className="absolute inset-0 bg-[#273A5A]/75 flex flex-col justify-center items-center text-center text-white p-6">
+                  <h1 className="text-3xl md:text-5xl font-bold mb-2">Voks<span className="text-[#fbbf24]">Find</span></h1>
+                  <p className="text-sm md:text-base max-w-[600px] leading-relaxed opacity-90">Tempat mencari dan melaporkan barang hilang di Fakultas Vokasi UB.</p>
                 </div>
               </div>
             </SwiperSlide>
@@ -59,61 +66,64 @@ function HomePage({ items }) {
 
       <FilterBar />
 
-      {/* 3. Section Barang Temuan (FOUND) - Menggunakan CardTemuan */}
-      <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ color: mainColor, fontWeight: 700, fontSize: '22px' }}>
-            Barang Temuan <span style={{ color: accentGold }}>Found</span>
+      {/* 3. Section Barang Temuan (FOUND) */}
+      <div className="max-w-[1200px] mx-auto my-10 px-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <h2 className="text-[#273A5A] font-bold text-xl md:text-2xl">
+            Barang Temuan <span className="text-[#E2B053]">Found</span>
           </h2>
           
-          <div style={{ display: 'flex', alignItems: 'center', background: '#F3F4F6', borderRadius: '50px', padding: '6px 15px', width: '230px' }}>
-            <IoSearch style={{ color: accentGold, fontSize: '18px', marginRight: '8px' }} />
+          <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full md:w-[250px] shadow-sm border border-gray-50">
+            <IoSearch className="text-[#E2B053] text-lg mr-2" />
             <input 
               type="text" 
               placeholder="Cari barang anda" 
-              style={{ border: 'none', background: 'transparent', outline: 'none', fontFamily: "'Montserrat', sans-serif", fontWeight: 600, color: mainColor, fontSize: '12px', width: '100%' }} 
+              className="bg-transparent border-none outline-none font-semibold text-[#273A5A] text-xs w-full" 
             />
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
-          {foundItems.map((item, index) => (
-            // Menggunakan CardTemuan dengan prop isNew untuk item pertama
-            <CardTemuan key={item.id} item={item} isNew={index === 0} />
-          ))}
-        </div>
+        {loading ? (
+          <p className="text-center py-10 opacity-60">Memuat data...</p>
+        ) : error ? (
+          <p className="text-center py-10 text-red-500">{error}</p>
+        ) : foundItems.length === 0 ? (
+          <p className="text-center py-10 opacity-60">Tidak ada barang temuan terbaru.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {foundItems.map((item, index) => (
+              <CardTemuan key={item.barang_id || item.id} item={item} isNew={index === 0} />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* 4. Section Dicari Barang Hilang (LOST) - Menggunakan ItemCard */}
-      <div style={{ maxWidth: '1200px', margin: '60px auto', padding: '0 20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ color: mainColor, fontWeight: 700, fontSize: '22px' }}>
-            Dicari Barang Hilang <span style={{ color: accentGold }}>Lost</span>
+      {/* 4. Section Dicari Barang Hilang (LOST) */}
+      <div className="max-w-[1200px] mx-auto my-12 px-4 pb-20">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <h2 className="text-[#273A5A] font-bold text-xl md:text-2xl">
+            Dicari Barang Hilang <span className="text-[#E2B053]">Lost</span>
           </h2>
           
-          <Link to="/lapor" style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            background: '#F3F4F6', 
-            color: mainColor, 
-            textDecoration: 'none', 
-            padding: '6px 18px', 
-            borderRadius: '50px', 
-            fontSize: '12px', 
-            fontWeight: 700 
-          }}>
-            <HiOutlineClipboardList style={{ color: accentGold, fontSize: '18px' }} />
+          <Link to="/lapor" className="flex items-center gap-2 bg-[#273A5A] text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-lg shadow-[#273A5A]/20 hover:bg-[#1a2944] transition-all">
+            <HiOutlineClipboardList className="text-[#E2B053] text-lg" />
             Lapor Kehilangan
           </Link>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
-          {lostItems.map(item => (
-            // Menggunakan ItemCard untuk barang hilang
-            <ItemCard key={item.id} item={item} />
-          ))}
-        </div>
+        {loading ? (
+          <p className="text-center py-10 opacity-60">Memuat data...</p>
+        ) : error ? (
+          <p className="text-center py-10 text-red-500">{error}</p>
+        ) : lostItems.length === 0 ? (
+          <p className="text-center py-10 opacity-60">Tidak ada laporan barang hilang terbaru.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {lostItems.map(item => (
+              <ItemCard key={item.barang_id || item.id} item={item} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

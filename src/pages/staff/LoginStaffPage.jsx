@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, LogIn, X } from 'lucide-react';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const LoginStaffPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Logika login staff di sini
-    console.log("Login Staff:", { email, password });
-    navigate('/staff/dashboard');
+    setIsLoading(true);
+    try {
+      await login(email, password);
+      // Optional: Check if user.role is staff
+      navigate('/staff/dashboard');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Login gagal');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -75,9 +85,10 @@ const LoginStaffPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#E2B053] hover:bg-[#d1a248] text-white font-extrabold py-4 rounded-2xl mt-4 transition-all duration-300 shadow-lg shadow-yellow-500/30 text-lg"
+            disabled={isLoading}
+            className="w-full bg-[#E2B053] hover:bg-[#d1a248] text-white font-extrabold py-4 rounded-2xl mt-4 transition-all duration-300 shadow-lg shadow-yellow-500/30 text-lg disabled:opacity-50"
           >
-            Masuk Sekarang
+            {isLoading ? 'Memuat...' : 'Masuk Sekarang'}
           </button>
         </form>
       </div>

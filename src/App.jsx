@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -15,7 +15,7 @@ import HilangDetailPage from './pages/HilangDetailPage';
 import PengembalianPage from './pages/PengembalianPage';
 import PengambilanPage from './pages/PengambilanPage';
 import ScrollToTop from './components/ScrollToTop'
-import { itemsData } from './data/dummyData'
+import { AuthContext } from './contexts/AuthContext'
 
 // --- IMPORT HALAMAN STAFF ---
 import DashboardPage from './pages/staff/DashboardPage';
@@ -28,9 +28,8 @@ import LaporanKlaimBarangPage from './pages/staff/LaporanKlaimBarangPage';
 import LoginStaffPage from './pages/staff/LoginStaffPage'; // <--- IMPORT LOGIN STAFF
 
 function App() {
-  const [user, setUser] = useState(null)
+  const { user, logout } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [items, setItems] = useState(itemsData)
   
   const location = useLocation();
 
@@ -38,21 +37,8 @@ function App() {
   const isStaffDashboard = location.pathname.startsWith('/staff') && location.pathname !== '/staff';
   const isStaffPage = location.pathname.startsWith('/staff');
 
-  const handleLogin = (userData) => {
-    setUser(userData)
-    setIsModalOpen(false) 
-  }
-
-  const handleLogout = () => {
-    setUser(null)
-  }
-
-  const handleAddItem = (newItem) => {
-    setItems([...items, { ...newItem, id: Date.now() }])
-  }
-
   return (
-    <div className={isStaffDashboard ? "flex bg-white min-h-screen" : ""}>
+    <div className={isStaffDashboard ? "flex flex-col md:flex-row bg-white min-h-screen" : ""}>
       <ScrollToTop />
       
       {/* Sidebar HANYA muncul jika di dashboard staff (BUKAN di login staff) */}
@@ -70,24 +56,23 @@ function App() {
         <LoginModal 
           isOpen={isModalOpen} 
           onClose={() => setIsModalOpen(false)} 
-          onLogin={handleLogin} 
         />
         
         {/* Main Content Area */}
         <div style={{ paddingTop: isStaffDashboard ? '0px' : (isStaffPage ? '0px' : '70px'), minHeight: '80vh' }}>
           <Routes>
             {/* --- ROUTE USER BIASA --- */}
-            <Route path="/" element={<HomePage items={items} />} />
-            <Route path="/barang-hilang" element={<LostItemsPage items={items} />} />
-            <Route path="/barang-ditemukan" element={<FoundItemsPage items={items} />} />
-            <Route path="/lapor" element={<ReportPage onAddItem={handleAddItem} />} />
-            <Route path="/barang/:id" element={<TemuanDetailPage items={items} />} />
-            <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/barang-hilang" element={<LostItemsPage />} />
+            <Route path="/barang-ditemukan" element={<FoundItemsPage />} />
+            <Route path="/lapor" element={<ReportPage />} />
+            <Route path="/barang/:id" element={<TemuanDetailPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/riwayat-claim" element={<RiwayatClaimPage />} />
-            <Route path="/klaim/:id" element={<KlaimBarangPage items={items} />} />
-            <Route path="/barang-hilang/:id" element={<HilangDetailPage items={items} />} />
-            <Route path="/pengembalian/:id" element={<PengembalianPage items={items} />} />
-            <Route path="/pengambilan/:id" element={<PengambilanPage items={items} />} />
+            <Route path="/klaim/:id" element={<KlaimBarangPage />} />
+            <Route path="/barang-hilang/:id" element={<HilangDetailPage />} />
+            <Route path="/pengembalian/:id" element={<PengembalianPage />} />
+            <Route path="/pengambilan/:id" element={<PengambilanPage />} />
 
             {/* --- ROUTE STAFF --- */}
             <Route path="/staff" element={<LoginStaffPage />} /> {/* <--- ROUTE LOGIN STAFF */}

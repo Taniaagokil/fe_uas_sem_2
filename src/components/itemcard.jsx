@@ -31,7 +31,7 @@ function ItemCard({ item }) {
       </style>
 
       <div className="item-card-hilang" 
-        onClick={() => navigate(`/barang-hilang/${item.id}`)} // Navigasi saat kartu diklik
+        onClick={() => navigate(`/barang-hilang/${item.barang_id}`)} // Navigasi saat kartu diklik
         style={{
           background: '#F8F9FA',
           borderRadius: '20px', 
@@ -46,8 +46,8 @@ function ItemCard({ item }) {
         <div style={{ borderRadius: '16px', overflow: 'hidden', height: '150px' }}>
           <img 
             className="card-img-hilang"
-            src={item.foto || item.image || `https://via.placeholder.com/400x300?text=${item.nama}`} 
-            alt={item.nama}
+            src={item.foto_barang ? `http://localhost:8000/storage/barang/${item.foto_barang}` : `https://via.placeholder.com/400x300?text=${item.nama_barang}`} 
+            alt={item.nama_barang}
             style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
           />
         </div>
@@ -57,21 +57,21 @@ function ItemCard({ item }) {
             margin: '0 0 10px 0', fontSize: '16px', fontWeight: '800', color: darkBlue,
             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' 
           }}>
-            {item.nama}
+            {item.nama_barang}
           </h3>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
             <div style={{...detailRowStyle, color: darkBlue}}>
               <HiOutlineOfficeBuilding style={{ color: themeColor, fontSize: '15px' }} />
-              <span style={{ opacity: 0.8 }}>{item.lokasi || 'Vokasi Veteran'}</span>
+              <span style={{ opacity: 0.8 }}>{item.laporan?.gedung?.nama_gedung || 'Vokasi Veteran'}</span>
             </div>
             <div style={{...detailRowStyle, color: darkBlue}}>
               <IoLocationSharp style={{ color: themeColor, fontSize: '15px' }} />
-              <span style={{ opacity: 0.8 }}>{item.lokasiDetail || item.lokasi}</span>
+              <span style={{ opacity: 0.8 }}>{item.laporan?.lokasi_detail || 'Detail tidak tersedia'}</span>
             </div>
             <div style={{...detailRowStyle, color: darkBlue}}>
               <IoCalendarClear style={{ color: themeColor, fontSize: '15px' }} />
-              <span style={{ opacity: 0.8 }}>{item.tanggal}</span>
+              <span style={{ opacity: 0.8 }}>{item.laporan?.tanggal_hilang || item.tanggal_lapor}</span>
             </div>
           </div>
 

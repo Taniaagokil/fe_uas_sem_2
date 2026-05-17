@@ -1,21 +1,32 @@
-import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { UploadCloud, ChevronDown, Building, CalendarDays, Check } from 'lucide-react'; // Tambah Check
+import { UploadCloud, ChevronDown, Building, CalendarDays, Check } from 'lucide-react';
+import useFetch from '../hooks/useFetch';
+import axiosClient from '../api/axiosClient';
 
-const ReportPage = ({ onAddItem }) => {
+const ReportPage = () => {
   const navigate = useNavigate();
-  const [isSubmitted, setIsSubmitted] = useState(false); // State untuk modal
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     namaBarang: '',
     kategori: '',
-    gedung: 'Vokasi Veteran - Gedung BNI',
+    gedung: '',
     lokasi: '',
     tanggal: '', 
     deskripsi: ''
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
+
+  const { data: categories } = useFetch('/kategori');
+  const { data: buildings } = useFetch('/gedung');
+
+  useEffect(() => {
+    if (buildings && buildings.length > 0 && !formData.gedung) {
+      setFormData(prev => ({ ...prev, gedung: buildings[0].gedung_id }));
+    }
+  }, [buildings]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,25 +43,33 @@ const ReportPage = ({ onAddItem }) => {
     fileInputRef.current.click();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (onAddItem) {
-      onAddItem({
-        ...formData,
-        status: 'hilang',
-        id: Date.now(),
-        image: selectedFile ? URL.createObjectURL(selectedFile) : null
-      });
+    const data = new FormData();
+    data.append('nama_barang', formData.namaBarang);
+    data.append('kategori_id', formData.kategori);
+    data.append('gedung_id', formData.gedung);
+    data.append('lokasi_detail', formData.lokasi);
+    data.append('tanggal_hilang', formData.tanggal);
+    data.append('deskripsi', formData.deskripsi);
+    if (selectedFile) {
+      data.append('foto', selectedFile);
     }
-    
-    // Tampilkan animasi sukses
-    setIsSubmitted(true);
 
-    // Otomatis pindah halaman setelah 2.5 detik
-    setTimeout(() => {
-      navigate('/'); 
-    }, 2500);
+    try {
+      await axiosClient.post('/laporan-kehilangan', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      setIsSubmitted(true);
+      setTimeout(() => {
+        navigate('/'); 
+      }, 2500);
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Gagal mengirim laporan');
+    }
   };
 
   return (
@@ -58,10 +77,13 @@ const ReportPage = ({ onAddItem }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gray-100 min-h-screen flex justify-center py-12 px-4 relative" 
+      className="bg-gray-50 min-h-screen flex justify-center py-6 md:py-12 px-4 relative" 
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
-      <div className="bg-white p-8 rounded-[20px] shadow-sm w-full max-w-2xl h-fit">
+      <div className="bg-white p-5 md:p-10 rounded-[30px] shadow-xl w-full max-w-2xl h-fit border border-gray-100">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-[#263859] mb-8 text-center md:text-left">
+          Lapor <span className="text-[#EBB134]">Kehilangan</span>
+        </h2>
         
         <input 
           type="file" 
@@ -83,7 +105,6 @@ const ReportPage = ({ onAddItem }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Form fields tetap sama seperti sebelumnya... */}
           <div>
             <label className="block text-[#263859] font-bold text-[15px] mb-2">
               Nama Barang <span className="text-red-500">*</span>
@@ -95,82 +116,116 @@ const ReportPage = ({ onAddItem }) => {
               value={formData.namaBarang}
               onChange={handleChange}
               placeholder="Contoh: iPhone 17 Pro Max" 
-              className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 placeholder-gray-400"
+              className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-[14px] focus:outline-none text-[#263859] placeholder-gray-400 font-medium"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-[#263859] font-bold text-[15px] mb-2">
-                Kategori Barang <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <select 
-                  name="kategori"
-                  required
-                  value={formData.kategori}
-                  onChange={handleChange}
-                  className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 cursor-pointer"
-                >
-                  <option value="" disabled>Pilih Kategori</option>
-                  <option value="elektronik">Elektronik</option>
-                  <option value="dokumen">Dokumen</option>
-                  <option value="pakaian">Pakaian</option>
-                  <option value="lainnya">Lainnya</option>
-                </select>
-                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                  <ChevronDown className="w-5 h-5 text-[#263859]" strokeWidth={2.5} />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-[#263859] font-bold text-[15px] mb-2">
-                Gedung kehilangan barang <span className="text-red-500">*</span>
-              </label>
-              <div className="relative flex items-center bg-[#F8F9FA] rounded-[12px] px-4 py-3.5">
-                <Building className="w-5 h-5 text-[#EBB134] mr-3" strokeWidth={2} />
-                <select 
-                  name="gedung"
-                  value={formData.gedung}
-                  onChange={handleChange}
-                  className="w-full bg-transparent text-sm appearance-none focus:outline-none text-gray-600 cursor-pointer"
-                >
-                  <option value="Vokasi Veteran - Gedung BNI">Vokasi Veteran - Gedung BNI</option>
-                  <option value="Vokasi Veteran - Gedung Perbankan">Vokasi Veteran - Gedung Perbankan</option>
-                  <option value="Vokasi Dieng">Vokasi Dieng</option>
-                </select>
-                <ChevronDown className="w-5 h-5 text-[#263859] absolute right-4 pointer-events-none" strokeWidth={2.5} />
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Kategori Barang <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <select 
+                name="kategori"
+                required
+                value={formData.kategori}
+                onChange={handleChange}
+                className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-[14px] appearance-none focus:outline-none text-[#263859] font-medium cursor-pointer"
+              >
+                <option value="" disabled>Pilih Kategori</option>
+                {categories && categories.map(cat => (
+                  <option key={cat.kategori_barang_id} value={cat.kategori_barang_id}>
+                    {cat.nama_kategori}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                <ChevronDown className="w-5 h-5 text-[#263859]" strokeWidth={2.5} />
               </div>
             </div>
           </div>
 
           <div>
-             <label className="block text-[#263859] font-bold text-[15px] mb-2">
-               Deskripsi dan ciri ciri <span className="text-red-500">*</span>
-             </label>
-             <textarea 
-               rows="4" 
-               name="deskripsi"
-               required
-               value={formData.deskripsi}
-               onChange={handleChange}
-               placeholder="Deskripsikan ciri ciri barang anda" 
-               className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-sm focus:outline-none focus:ring-2 focus:ring-[#263859] text-gray-600 placeholder-gray-400 resize-none"
-             ></textarea>
-           </div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Gedung kehilangan barang <span className="text-red-500">*</span>
+            </label>
+            <div className="relative flex items-center bg-[#F8F9FA] rounded-[12px] px-4 py-3.5">
+              <Building className="w-5 h-5 text-[#EBB134] mr-3" strokeWidth={2} />
+              <select 
+                name="gedung"
+                value={formData.gedung}
+                onChange={handleChange}
+                className="w-full bg-transparent text-[14px] appearance-none focus:outline-none text-[#263859] font-medium cursor-pointer"
+              >
+                {buildings && buildings.map(b => (
+                  <option key={b.gedung_id} value={b.gedung_id}>
+                    {b.nama_gedung}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-5 h-5 text-[#263859] absolute right-0 pointer-events-none" strokeWidth={2.5} />
+            </div>
+          </div>
 
-          <div className="flex gap-4 pt-4">
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Lokasi Terakhir <span className="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              name="lokasi"
+              required
+              value={formData.lokasi}
+              onChange={handleChange}
+              placeholder="Contoh: Lt. 3 ruang 306" 
+              className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-[14px] focus:outline-none text-[#263859] placeholder-gray-400 font-medium"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Tanggal Hilang
+            </label>
+            <div className="relative flex items-center bg-[#F8F9FA] rounded-[12px] px-4 py-3.5">
+              <CalendarDays className="w-5 h-5 text-[#EBB134] mr-3" strokeWidth={2} />
+              <input 
+                type="date" 
+                name="tanggal"
+                required
+                value={formData.tanggal}
+                onChange={handleChange}
+                className="w-full bg-transparent text-[14px] focus:outline-none text-[#263859] font-medium"
+              />
+              <ChevronDown className="w-5 h-5 text-[#263859] absolute right-4 pointer-events-none" strokeWidth={2.5} />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[#263859] font-bold text-[15px] mb-2">
+              Deskripsi dan ciri ciri <span className="text-red-500">*</span>
+            </label>
+            <textarea 
+              rows="4" 
+              name="deskripsi"
+              required
+              value={formData.deskripsi}
+              onChange={handleChange}
+              placeholder="Deskripsikan ciri ciri barang anda" 
+              className="w-full bg-[#F8F9FA] px-4 py-3.5 rounded-[12px] text-[14px] focus:outline-none text-[#263859] placeholder-gray-400 resize-none font-medium"
+            ></textarea>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 pt-6">
             <button 
               type="button" 
               onClick={() => navigate('/')}
-              className="w-1/2 bg-[#263859] hover:bg-[#1a263d] text-white font-semibold py-3.5 px-4 rounded-[12px] transition duration-200 text-[15px]"
+              className="w-full sm:w-1/2 bg-gray-100 text-[#263859] hover:bg-gray-200 font-bold py-4 px-4 rounded-xl transition duration-200 text-sm"
             >
               Kembali
             </button>
             <button 
               type="submit" 
-              className="w-1/2 bg-[#EBB134] hover:bg-[#d19a28] text-white font-semibold py-3.5 px-4 rounded-[12px] transition duration-200 text-[15px]"
+              className="w-full sm:w-1/2 bg-[#EBB134] hover:bg-[#d19a28] text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-[#EBB134]/20 transition duration-200 text-sm"
             >
               Lapor Kehilangan
             </button>

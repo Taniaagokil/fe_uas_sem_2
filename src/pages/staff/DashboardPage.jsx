@@ -3,9 +3,12 @@ import { motion } from 'framer-motion';
 import Sidebar from '../../components/staff/Sidebar';
 import StatCard from '../../components/staff/StatCard';
 import FooterStaff from '../../components/staff/Footerstaff';
+import useFetch from '../../hooks/useFetch';
 import './DashboardPage.css';
 
 const DashboardPage = () => {
+  const { data: stats, loading } = useFetch('/admin/dashboard-stats');
+
   // Definisi varian animasi untuk container utama
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -44,9 +47,9 @@ const DashboardPage = () => {
         
         {/* Row Statistik */}
         <motion.div className="stats-row" variants={itemVariants}>
-          <StatCard angka="67" teks="Barang Temuan" />
-          <StatCard angka="15" teks="Barang Hilang" />
-          <StatCard angka="10" teks="Klaim Barang Hilang" />
+          <StatCard angka={loading ? '...' : (stats?.total_found || 0).toString()} teks="Barang Temuan" />
+          <StatCard angka={loading ? '...' : (stats?.total_lost || 0).toString()} teks="Barang Hilang" />
+          <StatCard angka={loading ? '...' : (stats?.pending_claims || 0).toString()} teks="Klaim Barang Hilang" />
         </motion.div>
 
         {/* Footer juga ikut muncul pelan-pelan */}

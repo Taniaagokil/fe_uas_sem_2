@@ -3,73 +3,48 @@ import React from 'react';
 const ReusableTable = ({ columns, data }) => {
   const safeData = Array.isArray(data) ? data : [];
   return (
-    <div className="w-full overflow-x-auto font-['Montserrat'] scrollbar-hide">
-      <table className="w-full min-w-[800px] border-separate border-spacing-y-2">
-        <thead>
-          <tr style={{ backgroundColor: '#D4B04C', color: 'white' }}>
+    <div className="w-full overflow-x-auto md:overflow-visible">
+      <table className="w-full text-base text-left border-separate border-spacing-y-3">
+        <thead className="bg-[#E6B331] text-white font-bold">
+          <tr>
             {columns.map((col, index) => (
               <th 
                 key={index} 
-                style={{ 
-                  width: col.width,
-                  padding: '12px 8px',
-                  fontWeight: 'bold',
-                  textAlign: col.align || 'center',
-                  fontSize: '10px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  border: 'none',
-                  paddingLeft: col.align === 'left' ? '24px' : '8px'
-                }}
-                className={`${index === 0 ? 'rounded-l-xl' : ''} ${index === columns.length - 1 ? 'rounded-r-xl' : ''}`}
+                style={{ width: col.width }}
+                className={`px-6 py-4 ${index === 0 ? 'rounded-tl-lg' : ''} ${index === columns.length - 1 ? 'rounded-tr-lg' : ''} ${
+                  col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
+                }`}
               >
                 {col.header}
               </th>
             ))}
           </tr>
         </thead>
-
         <tbody>
           {safeData.length > 0 ? (
             safeData.map((row, rowIndex) => (
               <tr 
-                key={rowIndex}
-                style={{ 
-                  backgroundColor: '#F8F9FA',
-                  transition: 'background-color 0.2s'
-                }}
-                className="hover:bg-gray-100 shadow-sm"
+                key={rowIndex} 
+                className="bg-[#F1F3F4] hover:bg-slate-200/40 transition-all duration-150"
               >
                 {columns.map((col, colIndex) => (
                   <td 
                     key={colIndex} 
-                    style={{ 
-                      padding: '12px 8px',
-                      color: '#2D3E50',
-                      textAlign: col.align || 'center',
-                      fontWeight: 'bold',
-                      fontSize: '12px',
-                      border: 'none',
-                      paddingLeft: col.align === 'left' ? '24px' : '8px'
-                    }}
-                    className={`${colIndex === 0 ? 'rounded-l-xl' : ''} ${colIndex === columns.length - 1 ? 'rounded-r-xl' : ''}`}
+                    style={{ width: col.width }}
+                    className={`px-6 py-5 text-[#263959] ${colIndex === 0 ? 'font-bold rounded-l-lg' : 'font-medium'} ${
+                      colIndex === columns.length - 1 ? 'rounded-r-lg' : ''
+                    } ${
+                      col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
+                    }`}
                   >
-                    <div style={{ 
-                      display: 'flex', 
-                      justifyContent: col.align === 'left' ? 'flex-start' : 'center', 
-                      alignItems: 'center', 
-                      height: '100%',
-                      overflow: 'hidden'
-                    }}>
-                      {col.render ? col.render(row, rowIndex) : <span className="truncate w-full block">{row[col.key]}</span>}
-                    </div>
+                    {col.render ? col.render(row, rowIndex) : row[col.key]}
                   </td>
                 ))}
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={columns.length} style={{ textAlign: 'center', padding: '40px 0', color: '#6B7280' }}>
+              <td colSpan={columns.length} className="text-center py-10 text-slate-500 font-semibold text-sm">
                 Tidak ada data.
               </td>
             </tr>

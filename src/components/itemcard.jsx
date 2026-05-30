@@ -9,87 +9,57 @@ function ItemCard({ item }) {
   const darkBlue = '#273A5A'; 
 
   return (
-    <>
-      <style>
-        {`
-          .item-card-hilang {
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-          }
-          .item-card-hilang:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 25px rgba(39, 58, 90, 0.15) !important;
-          }
-          .item-card-hilang:hover .card-img-hilang {
-            transform: scale(1.1);
-          }
-          .item-card-hilang:hover .detail-btn-hilang {
-            background-color: #1c2b45 !important;
-            box-shadow: 0 4px 12px rgba(39, 58, 90, 0.4) !important;
-          }
-        `}
-      </style>
+    <div 
+      className="group bg-[#F8F9FA] rounded-[24px] overflow-hidden p-3 relative flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-slate-200/50 cursor-pointer border border-slate-100 max-w-[280px] w-full mx-auto font-['Montserrat']"
+      onClick={() => navigate(`/barang-hilang/${item.barang_id}`)}
+    >
+      
+      {/* Container Gambar */}
+      <div className="rounded-[20px] overflow-hidden h-[160px] relative">
+        <img 
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src={item.foto_barang ? `http://localhost:8000/storage/barang/${item.foto_barang}` : `https://via.placeholder.com/400x300?text=${item.nama_barang}`} 
+          alt={item.nama_barang}
+          onError={(e) => {
+            e.target.src = `https://via.placeholder.com/400x300?text=${item.nama_barang}`
+          }}
+        />
+      </div>
 
-      <div className="item-card-hilang" 
-        onClick={() => navigate(`/barang-hilang/${item.barang_id}`)} // Navigasi saat kartu diklik
-        style={{
-          background: '#F8F9FA',
-          borderRadius: '20px', 
-          overflow: 'hidden',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-          fontFamily: "'Montserrat', sans-serif",
-          padding: '10px', 
-          maxWidth: '280px',
-          position: 'relative'
-        }}>
-        
-        <div style={{ borderRadius: '16px', overflow: 'hidden', height: '150px' }}>
-          <img 
-            className="card-img-hilang"
-            src={item.foto_barang ? `http://localhost:8000/storage/barang/${item.foto_barang}` : `https://via.placeholder.com/400x300?text=${item.nama_barang}`} 
-            alt={item.nama_barang}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
-          />
-        </div>
-
-        <div style={{ padding: '12px 6px 4px 6px' }}>
-          <h3 style={{ 
-            margin: '0 0 10px 0', fontSize: '16px', fontWeight: '800', color: darkBlue,
-            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' 
-          }}>
+      {/* Info Content */}
+      <div className="p-3 pt-4 flex-grow flex flex-col justify-between">
+        <div>
+          {/* Nama Barang */}
+          <h3 className="text-base font-extrabold text-[#273A5A] mb-3 truncate leading-snug">
             {item.nama_barang}
           </h3>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
-            <div style={{...detailRowStyle, color: darkBlue}}>
-              <HiOutlineOfficeBuilding style={{ color: themeColor, fontSize: '15px' }} />
-              <span style={{ opacity: 0.8 }}>{item.laporan?.gedung?.nama_gedung || 'Vokasi Veteran'}</span>
+          {/* Detail List */}
+          <div className="flex flex-col gap-2.5 mb-5">
+            <div className="flex items-center gap-2.5 text-[11px] font-semibold text-[#273A5A]/90">
+              <HiOutlineOfficeBuilding className="text-sm shrink-0" style={{ color: themeColor }} />
+              <span className="truncate opacity-80">{item.laporan?.gedung?.nama_gedung || 'Vokasi Veteran'}</span>
             </div>
-            <div style={{...detailRowStyle, color: darkBlue}}>
-              <IoLocationSharp style={{ color: themeColor, fontSize: '15px' }} />
-              <span style={{ opacity: 0.8 }}>{item.laporan?.lokasi_detail || 'Detail tidak tersedia'}</span>
+            <div className="flex items-center gap-2.5 text-[11px] font-semibold text-[#273A5A]/90">
+              <IoLocationSharp className="text-sm shrink-0" style={{ color: themeColor }} />
+              <span className="truncate opacity-80">{item.laporan?.lokasi_detail || 'Detail tidak tersedia'}</span>
             </div>
-            <div style={{...detailRowStyle, color: darkBlue}}>
-              <IoCalendarClear style={{ color: themeColor, fontSize: '15px' }} />
-              <span style={{ opacity: 0.8 }}>{item.laporan?.tanggal_hilang || item.tanggal_lapor}</span>
+            <div className="flex items-center gap-2.5 text-[11px] font-semibold text-[#273A5A]/90">
+              <IoCalendarClear className="text-sm shrink-0" style={{ color: themeColor }} />
+              <span className="truncate opacity-80">{item.laporan?.tanggal_hilang || item.tanggal_lapor}</span>
             </div>
           </div>
-
-          <button 
-            className="detail-btn-hilang"
-            style={{
-              width: '100%', padding: '10px', background: darkBlue, color: 'white',
-              border: 'none', borderRadius: '12px', fontWeight: '700', fontSize: '14px', 
-            }}
-          >
-            Hubungi Staff
-          </button>
         </div>
+
+        {/* Tombol Hubungi Staff */}
+        <button 
+          className="w-full py-2.5 bg-[#273A5A] group-hover:bg-[#1a2944] text-white text-xs font-bold rounded-xl transition-all duration-300 group-hover:shadow-md group-hover:shadow-[#273A5A]/20 border-none cursor-pointer text-center"
+        >
+          Hubungi Staff
+        </button>
       </div>
-    </>
+    </div>
   );
 }
-
-const detailRowStyle = { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', fontWeight: '600' };
 
 export default ItemCard;

@@ -1,15 +1,13 @@
 import React from 'react';
 import './Footerstaff.css';
 
-// Pastikan nama variabel ini ADA dan SAMA dengan yang di export default
 const FooterStaff = () => {
   return (
-    <footer className="dashboard-footer" style={{ marginTop: 'auto', padding: '20px 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p style={{ color: '#a0aabf', fontSize: '14px', margin: 0 }}>
+    <footer className="w-full py-6 px-4 md:px-8 bg-transparent border-t border-slate-100 mt-auto font-['Montserrat']">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-sm text-slate-400 font-medium m-0">
           Copyright © | By VoksFind
         </p>
-        
       </div>
     </footer>
   );

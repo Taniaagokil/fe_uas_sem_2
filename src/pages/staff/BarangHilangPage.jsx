@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReusableTable from '../../components/staff/Table';
+import StatusDropdown from '../../components/staff/StatusDropdown';
 import Footerstaff from '../../components/staff/Footerstaff';
 import useFetch from '../../hooks/useFetch';
 import axiosClient from '../../api/axiosClient';
-import { FiEye, FiTrash2, FiX, FiSearch, FiRepeat } from 'react-icons/fi';
+import { FiEye, FiTrash2, FiX, FiSearch, FiRepeat, FiMapPin, FiCalendar, FiFileText } from 'react-icons/fi';
+import { useToast } from '../../contexts/ToastContext';
 
 const BarangHilangPage = () => {
   const { data, loading, error, reFetch } = useFetch('/admin/barang-hilang');
+  const { showToast, showConfirm } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBarang, setSelectedBarang] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,23 +31,27 @@ const BarangHilangPage = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       await axiosClient.put(`/admin/barang/${id}/status`, { status: newStatus });
-      alert('Status Berhasil Diperbarui');
+      showToast('Status Berhasil Diperbarui', 'success');
       reFetch();
     } catch (err) {
-      alert('Gagal memperbarui status');
+      showToast('Gagal memperbarui status', 'error');
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Apakah Anda yakin? Data barang hilang akan dihapus permanen!")) return;
-
-    try {
-      await axiosClient.delete(`/admin/barang/${id}`);
-      alert('Data telah berhasil dihapus.');
-      reFetch();
-    } catch (err) {
-      alert('Gagal menghapus data');
-    }
+  const handleDelete = (id) => {
+    showConfirm({
+      title: 'Hapus Laporan',
+      message: 'Apakah Anda yakin? Data barang hilang akan dihapus permanen!',
+      onConfirm: async () => {
+        try {
+          await axiosClient.delete(`/admin/barang/${id}`);
+          showToast('Data telah berhasil dihapus.', 'success');
+          reFetch();
+        } catch (err) {
+          showToast('Gagal menghapus data', 'error');
+        }
+      }
+    });
   };
 
   const openDetail = (barang) => {
@@ -65,116 +72,89 @@ const BarangHilangPage = () => {
     e.preventDefault();
     try {
       await axiosClient.post(`/admin/barang/${selectedBarang.barang_id}/tarik-data`, tarikFormData);
-      alert('Data telah ditarik ke daftar Barang Temuan.');
+      showToast('Data telah ditarik ke daftar Barang Temuan.', 'success');
       setIsTarikModalOpen(false);
       reFetch();
     } catch (err) {
-      alert(err.response?.data?.message || 'Gagal menarik data');
+      showToast(err.response?.data?.message || 'Gagal menarik data', 'error');
     }
   };
 
   const columns = [
     { 
-      header: 'Kode', 
-      width: '50px',
-      render: (_, index) => <span className="text-[#2D3E50] font-bold">{String(index + 1).padStart(3, '0')}</span>
+      header: 'ID', 
+      width: '8%',
+      render: (row) => <span className="text-[#273A5A] font-bold text-sm md:text-base">{row.barang_id}</span>
     },
-    { 
-      header: 'Gambar', 
-      width: '80px',
-      render: (row) => (
-        <div className="w-10 h-10 rounded-xl bg-gray-100 overflow-hidden border border-gray-100 flex items-center justify-center mx-auto">
-          {row.foto_barang ? (
-            <img src={`http://localhost:8000/storage/barang/${row.foto_barang}`} className="w-full h-full object-cover" alt="" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-300 text-[8px] font-bold">NO IMG</div>
-          )}
-        </div>
-      )
-    },
+
     { 
       header: 'Nama Barang', 
       align: 'left',
-      width: '200px',
-      render: (row) => <span className="font-bold text-[#2D3E50] text-sm truncate">{row.nama_barang}</span>
+      width: '30%',
+      render: (row) => <span className="font-bold text-[#273A5A] text-sm md:text-base truncate">{row.nama_barang}</span>
     },
     { 
       header: 'Kategori', 
-      width: '120px',
+      width: '15%',
       render: (row) => (
-        <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-1 rounded-md font-bold uppercase tracking-tight">
+        <span className="text-xs md:text-sm bg-[#273A5A]/10 text-[#273A5A] px-3.5 py-1.5 rounded-full font-bold uppercase tracking-wider">
           {row.kategori?.nama_kategori || '-'}
         </span>
       )
     },
     { 
       header: 'Tanggal', 
-      width: '120px',
-      render: (row) => <span className="text-[11px] text-gray-400 font-medium">{row.laporan?.tanggal_hilang || '-'}</span>
+      width: '15%',
+      render: (row) => <span className="text-sm md:text-base text-slate-400 font-semibold">{row.laporan?.tanggal_hilang || '-'}</span>
     },
     { 
       header: 'Status Laporan', 
-      width: '180px',
+      align: 'center',
+      width: '22%',
       render: (row) => {
         const getStatusStyles = (status) => {
           switch (status) {
-            case 'belum_ditemukan': return 'bg-[#FFF0F0] text-[#CC7171] border-[#FFDEDE]';
-            case 'ditemukan': return 'bg-[#F0F7FF] text-[#4A90E2] border-[#D0E5FF]';
-            case 'dikembalikan': return 'bg-[#F0FFF4] text-[#38A169] border-[#C6F6D5]';
-            case 'arsip': return 'bg-[#F7FAFC] text-[#718096] border-[#E2E8F0]';
-            default: return 'bg-gray-100 text-gray-600 border-gray-200';
+            case 'belum_ditemukan': return 'bg-rose-500 hover:bg-rose-600 text-white';
+            case 'ditemukan': return 'bg-emerald-500 hover:bg-emerald-600 text-white';
+            case 'dikembalikan': return 'bg-indigo-550 hover:bg-indigo-600 text-white';
+            case 'arsip': return 'bg-slate-500 hover:bg-slate-600 text-white';
+            default: return 'bg-blue-500 hover:bg-blue-600 text-white';
           }
         };
 
+        const options = [
+          { value: 'belum_ditemukan', label: 'Belum Ditemukan' },
+          { value: 'ditemukan', label: 'Ditemukan' },
+          { value: 'dikembalikan', label: 'Dikembalikan' },
+          { value: 'arsip', label: 'Arsip' }
+        ];
+
         return (
-          <div className="w-full px-2">
-            <select 
+          <div className="w-full px-2 flex justify-center">
+            <StatusDropdown
               value={row.status}
-              onChange={(e) => handleStatusChange(row.barang_id, e.target.value)}
-              className={`w-full appearance-none px-2 py-1.5 rounded-xl text-[10px] font-extrabold border transition-all cursor-pointer text-center outline-none ${getStatusStyles(row.status)} hover:shadow-md focus:ring-2 focus:ring-opacity-50`}
-            >
-              <option value="belum_ditemukan">BELUM DITEMUKAN</option>
-              <option value="ditemukan">DITEMUKAN</option>
-              <option value="dikembalikan">DIKEMBALIKAN</option>
-              <option value="arsip">ARSIP</option>
-            </select>
+              onChange={(newStatus) => handleStatusChange(row.barang_id, newStatus)}
+              options={options}
+              statusStyles={getStatusStyles}
+            />
           </div>
         )
       }
     },
     { 
       header: 'Tindakan', 
-      width: '120px',
+      align: 'center',
+      width: '10%',
       render: (row) => (
-        <div className="flex gap-1.5 justify-center w-full">
+        <div className="flex items-center justify-center w-max mx-auto whitespace-nowrap">
           <motion.button 
             whileTap={{ scale: 0.95 }}
             onClick={() => openDetail(row)}
-            className="w-8 h-8 bg-white border border-gray-100 text-[#2D3E50] rounded-lg shadow-sm flex items-center justify-center hover:bg-[#2D3E50] hover:text-white transition-all group flex-shrink-0"
+            className="px-4 py-2 bg-[#263959] text-white rounded-xl hover:opacity-85 transition-opacity flex items-center justify-center gap-1.5 cursor-pointer font-bold text-xs md:text-sm"
             title="Detail"
           >
-            <FiEye size={14} />
-          </motion.button>
-          
-          {row.status === 'ditemukan' && (
-            <motion.button 
-              whileTap={{ scale: 0.95 }}
-              onClick={() => openTarikModal(row)}
-              className="px-2 h-8 bg-[#D4B04C] text-white rounded-lg shadow-lg shadow-[#D4B04C]/20 flex items-center gap-1 text-[9px] font-bold hover:bg-[#c4a142] transition-all flex-shrink-0"
-              title="Tarik ke Temuan"
-            >
-              <FiRepeat size={10} />
-              <span>Tarik</span>
-            </motion.button>
-          )}
-
-          <motion.button 
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handleDelete(row.barang_id)}
-            className="w-8 h-8 bg-white border border-red-100 text-[#FF4D4D] rounded-lg shadow-sm flex items-center justify-center hover:bg-[#FF4D4D] hover:text-white transition-all group flex-shrink-0"
-            title="Hapus"
-          >
-            <FiTrash2 size={14} />
+            <FiEye size={15} />
+            <span>Detail</span>
           </motion.button>
         </div>
       )
@@ -185,51 +165,39 @@ const BarangHilangPage = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col min-h-screen font-['Montserrat'] bg-white"
+      className="flex-grow min-h-screen font-['Montserrat'] bg-slate-50/30 flex flex-col"
     >
-      <div className="p-4 sm:p-6 md:p-10 flex-1">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-4">
+      <div className="p-6 md:p-10 flex-1 flex flex-col w-full">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 w-full">
           <div className="space-y-1">
-            <h1 className="text-2xl md:text-3xl font-extrabold text-[#2D3E50] tracking-tight">
-              Laporan Barang <span className="text-[#D4B04C]">Hilang</span>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-[#273A5A] tracking-tight">
+              Laporan Barang <span className="text-[#E2B053]">Hilang</span>
             </h1>
-            <p className="text-gray-400 text-xs md:text-sm font-medium">Kelola dan pantau semua laporan barang hilang dari mahasiswa</p>
+            <p className="text-slate-400 text-xs md:text-sm font-medium">Kelola dan pantau semua laporan barang hilang dari mahasiswa</p>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 md:mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-4 w-full">
           <motion.div 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             className="relative flex-1 max-w-full sm:max-w-md group"
           >
-            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#D4B04C] transition-colors" size={18} />
+            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#E2B053] transition-colors" size={18} />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-[#EDEDED] border-none rounded-xl focus:ring-1 focus:ring-[#D4B04C] outline-none text-sm"
+              className="block w-full pl-12 pr-4 py-3 bg-white border border-slate-200/60 rounded-2xl focus:ring-2 focus:ring-[#E2B053] focus:border-transparent outline-none text-sm text-[#273A5A] font-semibold transition-all"
               placeholder="Cari..."
             />
           </motion.div>
         </div>
 
-        <div className="bg-white rounded-2xl p-4 shadow-[0_0_20px_rgba(0,0,0,0.03)] border border-gray-50 overflow-hidden max-w-full">
-          <div className="overflow-x-auto">
-            <ReusableTable columns={columns} data={filteredData} />
-          </div>
+        <div className="w-full md:overflow-visible">
+          <ReusableTable columns={columns} data={filteredData} />
         </div>
 
-        <motion.button 
-          animate={{ y: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 3 }}
-          whileHover={{ scale: 1.2 }}
-          className="fixed bottom-12 right-12 bg-[#D4B04C] p-4 rounded-full text-white shadow-xl z-50"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-          </svg>
-        </motion.button>
       </div>
 
       <Footerstaff />
@@ -243,16 +211,16 @@ const BarangHilangPage = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
             />
             <motion.div 
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col md:flex-row"
+              className="bg-white w-full max-w-2xl rounded-[32px] overflow-hidden shadow-2xl border border-slate-100 relative z-10 flex flex-col md:flex-row max-h-[90vh] overflow-y-auto"
             >
               {/* Image Section */}
-              <div className="md:w-1/2 h-64 md:h-auto bg-gray-100 relative">
+              <div className="md:w-1/2 h-64 md:h-auto bg-slate-50 relative min-h-[300px] flex-shrink-0">
                 {selectedBarang.foto_barang ? (
                   <img 
                     src={`http://localhost:8000/storage/barang/${selectedBarang.foto_barang}`} 
@@ -260,69 +228,111 @@ const BarangHilangPage = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold">
-                    TIDAK ADA FOTO
+                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-slate-50/50 gap-2">
+                    <FiFileText size={48} className="text-slate-350" />
+                    <span className="font-bold text-[11px] uppercase tracking-wider text-slate-400">Tidak Ada Foto</span>
                   </div>
                 )}
-                <div className="absolute top-4 left-4 bg-[#2D3E50] text-white px-3 py-1 rounded-full text-[10px] font-bold">
-                  {selectedBarang.kategori?.nama_kategori}
+                <div className="absolute top-4 left-4 bg-[#273A5A]/90 backdrop-blur-sm text-white px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                  {selectedBarang.kategori?.nama_kategori || 'Kategori'}
                 </div>
               </div>
 
               {/* Info Section */}
-              <div className="md:w-1/2 p-8 relative">
+              <div className="md:w-1/2 p-6 md:p-8 relative flex flex-col justify-between overflow-y-auto">
                 <button 
                   onClick={() => setIsModalOpen(false)}
-                  className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute top-5 right-5 text-slate-400 hover:text-slate-650 hover:bg-slate-50 p-1.5 rounded-full transition-all cursor-pointer"
                 >
-                  <FiX size={24} />
+                  <FiX size={20} />
                 </button>
 
-                <h2 className="text-2xl font-bold text-[#2D3E50] mb-2">{selectedBarang.nama_barang}</h2>
-                <div className="flex items-center gap-2 mb-6">
-                  <span className={`px-3 py-1 rounded-full text-white text-[10px] font-bold ${
-                    selectedBarang.status === 'belum_ditemukan' ? 'bg-[#CC7171]' : 'bg-[#82B1E1]'
-                  }`}>
-                    {selectedBarang.status.replace('_', ' ').toUpperCase()}
-                  </span>
-                  <span className="text-gray-400 text-[11px]">ID Barang: #{selectedBarang.barang_id}</span>
+                <div className="space-y-6">
+                  {/* Header info */}
+                  <div className="space-y-2 pt-2">
+                    <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">ID LAPORAN: {selectedBarang.barang_id}</span>
+                    <h2 className="text-xl md:text-2xl font-extrabold text-[#273A5A] tracking-tight leading-tight pr-8">{selectedBarang.nama_barang}</h2>
+                    <div className="pt-1">
+                      <span className={`inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider shadow-sm ${
+                        selectedBarang.status === 'belum_ditemukan' 
+                          ? 'bg-rose-500 text-white' 
+                          : selectedBarang.status === 'ditemukan' 
+                          ? 'bg-emerald-500 text-white' 
+                          : selectedBarang.status === 'dikembalikan' 
+                          ? 'bg-indigo-500 text-white' 
+                          : 'bg-slate-500 text-white'
+                      }`}>
+                        {selectedBarang.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Details list */}
+                  <div className="space-y-4 border-t border-slate-100 pt-5">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-slate-50 rounded-xl text-[#E2B053] flex-shrink-0 border border-slate-100">
+                        <FiMapPin size={16} />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Lokasi Hilang</label>
+                        <p className="text-[#273A5A] font-bold text-sm leading-snug">{selectedBarang.laporan?.gedung?.nama_gedung || '-'}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-slate-50 rounded-xl text-[#E2B053] flex-shrink-0 border border-slate-100">
+                        <FiCalendar size={16} />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Tanggal Hilang</label>
+                        <p className="text-[#273A5A] font-bold text-sm leading-snug">{selectedBarang.laporan?.tanggal_hilang || '-'}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-slate-50 rounded-xl text-[#E2B053] flex-shrink-0 border border-slate-100">
+                        <FiFileText size={16} />
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Deskripsi</label>
+                        <p className="text-slate-600 text-xs md:text-sm font-semibold leading-relaxed bg-slate-50/50 p-3.5 rounded-2xl border border-slate-100 max-h-[110px] overflow-y-auto">
+                          {selectedBarang.deskripsi || 'Tidak ada deskripsi tambahan.'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-4 mb-8">
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Lokasi Hilang</label>
-                    <p className="text-[#2D3E50] font-semibold">{selectedBarang.laporan?.gedung?.nama_gedung || '-'}</p>
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tanggal Hilang</label>
-                    <p className="text-[#2D3E50] font-semibold">{selectedBarang.laporan?.tanggal_hilang || '-'}</p>
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Deskripsi</label>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {selectedBarang.deskripsi || 'Tidak ada deskripsi tambahan.'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-gray-100 flex gap-3">
-                  <button 
-                    onClick={() => setIsModalOpen(false)}
-                    className="flex-1 bg-[#EDEDED] text-[#2D3E50] font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors text-sm"
-                  >
-                    Tutup
-                  </button>
-                  {selectedBarang.status === 'ditemukan' && (
+                {/* Footer Buttons */}
+                <div className="pt-6 border-t border-slate-100 flex flex-col gap-2.5 mt-6">
+                  <div className="flex gap-2">
                     <button 
                       onClick={() => {
                         setIsModalOpen(false);
-                        openTarikModal(selectedBarang);
+                        handleDelete(selectedBarang.barang_id);
                       }}
-                      className="flex-1 bg-[#D4B04C] text-white font-bold py-3 rounded-xl hover:bg-[#c4a142] transition-colors text-sm flex items-center justify-center gap-2"
+                      className="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-extrabold py-3.5 rounded-2xl transition-all text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer border border-rose-150 shadow-sm active:scale-[0.98] font-['Montserrat']"
                     >
-                      <FiRepeat /> Tarik Data
+                      Hapus
                     </button>
-                  )}
+                    {selectedBarang.status === 'ditemukan' && (
+                      <button 
+                        onClick={() => {
+                          setIsModalOpen(false);
+                          openTarikModal(selectedBarang);
+                        }}
+                        className="flex-1 bg-[#E2B053] hover:bg-[#d49f3e] text-white font-extrabold py-3.5 rounded-2xl transition-all text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md active:scale-[0.98] font-['Montserrat']"
+                      >
+                        Tarik Data
+                      </button>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => setIsModalOpen(false)}
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-[#273A5A] font-extrabold py-3.5 rounded-2xl transition-all text-xs md:text-sm cursor-pointer active:scale-[0.98] font-['Montserrat']"
+                  >
+                    Tutup
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -339,63 +349,67 @@ const BarangHilangPage = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsTarikModalOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
             />
             <motion.div 
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl relative z-10 p-8"
+              className="bg-white w-full max-w-lg rounded-3xl md:rounded-[32px] overflow-hidden shadow-xl border border-slate-100 relative z-10 p-8 max-h-[90vh] overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-[#2D3E50]">Tarik Data Temuan</h2>
-                <button onClick={() => setIsTarikModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <h2 className="text-xl font-bold text-[#273A5A] tracking-tight">Tarik Data Temuan</h2>
+                <button onClick={() => setIsTarikModalOpen(false)} className="text-slate-400 hover:text-slate-600 cursor-pointer">
                   <FiX size={24} />
                 </button>
               </div>
 
-              <div className="mb-6 p-4 bg-gray-50 rounded-2xl flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg overflow-hidden border border-white shadow-sm">
-                  <img src={`http://localhost:8000/storage/barang/${selectedBarang.foto_barang}`} className="w-full h-full object-cover" alt="" />
+              <div className="mb-6 p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg overflow-hidden border border-slate-200 shadow-inner bg-slate-100 flex items-center justify-center flex-shrink-0">
+                  {selectedBarang.foto_barang ? (
+                    <img src={`http://localhost:8000/storage/barang/${selectedBarang.foto_barang}`} className="w-full h-full object-cover" alt="" />
+                  ) : (
+                    <span className="text-[8px] font-bold text-slate-300">NO IMG</span>
+                  )}
                 </div>
                 <div>
-                  <p className="font-bold text-[#2D3E50] text-sm">{selectedBarang.nama_barang}</p>
-                  <p className="text-[11px] text-gray-400">Kode: {selectedBarang.kode_barang}</p>
+                  <p className="font-bold text-[#273A5A] text-sm truncate max-w-[200px]">{selectedBarang.nama_barang}</p>
+                  <p className="text-[11px] text-slate-400 font-semibold">Kode: {selectedBarang.kode_barang}</p>
                 </div>
               </div>
 
               <form onSubmit={handleTarikData} className="space-y-5">
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Lokasi Ditemukan</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Lokasi Ditemukan</label>
                   <input
                     type="text"
                     required
                     placeholder="Misalnya: Lobi Gedung A Lantai 2"
                     value={tarikFormData.lokasi_ditemukan}
                     onChange={(e) => setTarikFormData({ ...tarikFormData, lokasi_ditemukan: e.target.value })}
-                    className="w-full px-4 py-3 bg-[#F8F9FA] border-none rounded-xl text-sm focus:ring-2 focus:ring-[#D4B04C] outline-none"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-xl text-sm text-[#273A5A] font-semibold focus:outline-none focus:ring-2 focus:ring-[#E2B053] focus:border-transparent transition-all placeholder-slate-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Tanggal Ditemukan</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Tanggal Ditemukan</label>
                   <input 
                     type="date"
                     required
                     value={tarikFormData.tanggal_ditemukan}
                     onChange={(e) => setTarikFormData({...tarikFormData, tanggal_ditemukan: e.target.value})}
-                    className="w-full px-4 py-3 bg-[#F8F9FA] border-none rounded-xl text-sm focus:ring-2 focus:ring-[#D4B04C] outline-none"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-xl text-sm text-[#273A5A] font-semibold focus:outline-none focus:ring-2 focus:ring-[#E2B053] focus:border-transparent transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Ditemukan Oleh (Opsional)</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Ditemukan Oleh (Opsional)</label>
                   <input 
                     type="text"
                     placeholder="Nama penemu..."
                     value={tarikFormData.ditemukan_oleh}
                     onChange={(e) => setTarikFormData({...tarikFormData, ditemukan_oleh: e.target.value})}
-                    className="w-full px-4 py-3 bg-[#F8F9FA] border-none rounded-xl text-sm focus:ring-2 focus:ring-[#D4B04C] outline-none"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-xl text-sm text-[#273A5A] font-semibold focus:outline-none focus:ring-2 focus:ring-[#E2B053] focus:border-transparent transition-all placeholder-slate-400"
                   />
                 </div>
 
@@ -403,13 +417,13 @@ const BarangHilangPage = () => {
                   <button 
                     type="button"
                     onClick={() => setIsTarikModalOpen(false)}
-                    className="flex-1 px-4 py-3 rounded-xl border border-gray-100 font-bold text-gray-500 hover:bg-gray-50 transition-all text-sm"
+                    className="flex-1 px-4 py-3.5 rounded-xl border border-slate-200 text-slate-500 font-extrabold hover:bg-slate-50 transition-all text-xs md:text-sm cursor-pointer"
                   >
                     Batal
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-4 py-3 rounded-xl bg-[#D4B04C] text-white font-bold hover:bg-[#c4a142] shadow-lg shadow-[#D4B04C]/30 transition-all text-sm"
+                    className="flex-1 px-4 py-3.5 rounded-xl bg-[#E2B053] hover:bg-[#d49f3e] text-white font-extrabold transition-all text-xs md:text-sm cursor-pointer shadow-md hover:shadow-lg active:scale-95"
                   >
                     Konfirmasi Tarik
                   </button>

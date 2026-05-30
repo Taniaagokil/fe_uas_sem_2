@@ -16,6 +16,7 @@ import PengembalianPage from './pages/PengembalianPage';
 import PengambilanPage from './pages/PengambilanPage';
 import ScrollToTop from './components/ScrollToTop'
 import { AuthContext } from './contexts/AuthContext'
+import { ToastProvider } from './contexts/ToastContext'
 
 // --- IMPORT HALAMAN STAFF ---
 import DashboardPage from './pages/staff/DashboardPage';
@@ -38,10 +39,11 @@ function App() {
   const isStaffPage = location.pathname.startsWith('/staff');
 
   return (
-    <div className={isStaffDashboard ? "flex flex-col md:flex-row bg-white min-h-screen" : ""}>
-      <ScrollToTop />
-      
-      {/* Sidebar HANYA muncul jika di dashboard staff (BUKAN di login staff) */}
+    <ToastProvider>
+      <div className={isStaffDashboard ? "flex flex-col md:flex-row bg-white min-h-screen" : ""}>
+        <ScrollToTop />
+        
+        {/* Sidebar HANYA muncul jika di dashboard staff (BUKAN di login staff) */}
       {isStaffDashboard && <Sidebar />}
 
       <div className={isStaffDashboard ? "flex-1 flex flex-col overflow-hidden" : "w-full"}>
@@ -90,6 +92,7 @@ function App() {
         {!isStaffPage && <Footer />}
       </div>
     </div>
+    </ToastProvider>
   )
 }
 

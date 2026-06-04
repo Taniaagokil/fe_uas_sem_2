@@ -116,8 +116,9 @@ const BarangHilangPage = () => {
           switch (status) {
             case 'belum_ditemukan': return 'bg-rose-500 hover:bg-rose-600 text-white';
             case 'ditemukan': return 'bg-emerald-500 hover:bg-emerald-600 text-white';
+            case 'diklaim': return 'bg-blue-500 hover:bg-blue-600 text-white';
             case 'dikembalikan': return 'bg-indigo-550 hover:bg-indigo-600 text-white';
-            case 'arsip': return 'bg-slate-500 hover:bg-slate-600 text-white';
+            case 'diarsipkan': return 'bg-slate-500 hover:bg-slate-600 text-white';
             default: return 'bg-blue-500 hover:bg-blue-600 text-white';
           }
         };
@@ -125,8 +126,9 @@ const BarangHilangPage = () => {
         const options = [
           { value: 'belum_ditemukan', label: 'Belum Ditemukan' },
           { value: 'ditemukan', label: 'Ditemukan' },
+          { value: 'diklaim', label: 'Diklaim' },
           { value: 'dikembalikan', label: 'Dikembalikan' },
-          { value: 'arsip', label: 'Arsip' }
+          { value: 'diarsipkan', label: 'Arsip' }
         ];
 
         return (

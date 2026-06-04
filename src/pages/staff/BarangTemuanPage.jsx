@@ -147,7 +147,7 @@ const BarangTemuanPage = () => {
             case 'diunggah': return 'bg-amber-500 hover:bg-amber-600 text-white';
             case 'diklaim': return 'bg-blue-500 hover:bg-blue-600 text-white';
             case 'dikembalikan': return 'bg-emerald-500 hover:bg-emerald-600 text-white';
-            case 'arsip': return 'bg-slate-500 hover:bg-slate-600 text-white';
+            case 'diarsipkan': return 'bg-slate-500 hover:bg-slate-600 text-white';
             default: return 'bg-[#4DA9F1] hover:bg-blue-600 text-white';
           }
         };
@@ -156,7 +156,7 @@ const BarangTemuanPage = () => {
           { value: 'diunggah', label: 'Diunggah' },
           { value: 'diklaim', label: 'Diklaim' },
           { value: 'dikembalikan', label: 'Dikembalikan' },
-          { value: 'arsip', label: 'Arsip' }
+          { value: 'diarsipkan', label: 'Arsip' }
         ];
 
         return (

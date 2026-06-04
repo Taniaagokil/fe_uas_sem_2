@@ -39,8 +39,10 @@ const RiwayatClaimPage = () => {
         return { label: 'Sedang Dicari', color: '#E2B053', dot: 'bg-amber-400' };
       case 'ditemukan':
         return { label: 'Sudah Ditemukan', color: '#5CB85C', dot: 'bg-green-500' };
+      case 'diklaim':
+        return { label: 'Sedang Diklaim', color: '#3B82F6', dot: 'bg-blue-500' };
       case 'selesai':
-        return { label: 'Selesai', color: '#5CB85C', dot: 'bg-green-500' };
+        return { label: 'Selesai / Dikembalikan', color: '#5CB85C', dot: 'bg-green-500' };
       case 'dibatalkan':
         return { label: 'Dibatalkan', color: '#9CA3AF', dot: 'bg-slate-400' };
       case 'diarsipkan':
